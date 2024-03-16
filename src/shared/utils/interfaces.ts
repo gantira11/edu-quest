@@ -20,6 +20,7 @@ export interface IRole {
 }
 
 export interface IParams {
+  id?: string,
   page?: number,
   limit?: number | string,
   keyword?: string

@@ -11,6 +11,10 @@ export const getListSubject = async ({ queryKey }: { queryKey: (string | IParams
   return await axiosInstance.get(`${Config.BASE_URL}/subject-list`, { params: queryKey[1] })
 }
 
+export const getDetailSubject = async ({ queryKey }: { queryKey: (string | undefined)[] }) => {
+  console.log(queryKey[1])
+}
+
 export const createSubject = async (data: InferType<typeof subjectSchema>) => {
   return await axiosInstance.post(`${Config.BASE_URL}/create-subject`, data)
 }

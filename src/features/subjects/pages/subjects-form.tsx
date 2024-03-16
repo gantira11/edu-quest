@@ -26,8 +26,8 @@ import { storage } from '@/config/firebase';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { subjectSchema } from '../utils/validation-schema';
 import { RiAddLine, RiDeleteBinLine } from '@remixicon/react';
-import { useMutation } from '@tanstack/react-query';
-import { createSubject } from '../services';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { createSubject, getDetailSubject } from '../services';
 import { enqueueSnackbar } from 'notistack';
 
 const SubjectForm = () => {
@@ -65,6 +65,11 @@ const SubjectForm = () => {
   const { fields, append, remove } = useFieldArray({
     control: methods.control,
     name: 'videos',
+  });
+
+  useQuery({
+    queryKey: ['GET_DETAIL_SUBJECT', params.id],
+    queryFn: getDetailSubject,
   });
 
   const mutateSubject = useMutation({ mutationFn: createSubject });
