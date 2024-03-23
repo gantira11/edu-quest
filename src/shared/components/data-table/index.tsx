@@ -4,6 +4,7 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
+  Table as TableType,
 } from '@tanstack/react-table';
 import {
   Table,
@@ -32,7 +33,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '../ui/pagination';
-import { head, map } from 'lodash';
+import { map } from 'lodash';
 
 type PaginatorType = {
   itemCount: number;
@@ -51,7 +52,8 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   loading: boolean;
   paginator?: PaginatorType;
-  onLimitChange?: (value: string) => void;
+  onLimitChange?: (value?: string) => void;
+  onPageChange?: (value?: number) => void;
 }
 
 const DataTable = <TData, TValue>({
@@ -60,6 +62,7 @@ const DataTable = <TData, TValue>({
   loading,
   paginator,
   onLimitChange,
+  onPageChange,
 }: DataTableProps<TData, TValue>) => {
   const [columnPinning, _] = useState<ColumnPinningState>({
     left: [],
@@ -76,6 +79,44 @@ const DataTable = <TData, TValue>({
     enableColumnPinning: true,
   });
 
+  function renderTableContent(table: TableType<TData>) {
+    const rows = table.getRowModel()?.rows;
+    if (rows && rows?.length > 0) {
+      return rows.map((row, index) => (
+        <TableRow
+          key={row.id}
+          data-state={row.getIsSelected() ? 'selected' : ''}
+        >
+          {row.getVisibleCells().map((cell) => (
+            <TableCell
+              key={cell.id}
+              className={cn(
+                'whitespace-nowrap',
+                cell.column.getIsPinned() === 'right'
+                  ? 'sticky right-0 bg-white drop-shadow-lg'
+                  : '',
+                index % 2 !== 0 && 'bg-slate-50'
+              )}
+            >
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            </TableCell>
+          ))}
+        </TableRow>
+      ));
+    } else {
+      return (
+        <TableRow>
+          <TableCell
+            colSpan={columns.length}
+            className='h-24 text-center font-semibold text-slate-600'
+          >
+            Tidak ada data.
+          </TableCell>
+        </TableRow>
+      );
+    }
+  }
+
   return (
     <>
       <div className='borderF overflow-hidden rounded-md'>
@@ -84,12 +125,11 @@ const DataTable = <TData, TValue>({
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
-                  console.log(header.getSize());
                   return (
                     <TableHead
                       key={header.id}
                       className={cn(
-                        'bg-primary text-white whitespace-nowrap',
+                        'whitespace-nowrap bg-primary text-white',
                         header.column.getIsPinned() === 'right' &&
                           'sticky right-0 bg-primary text-white drop-shadow-lg'
                       )}
@@ -108,7 +148,7 @@ const DataTable = <TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {loading && (
+            {loading ? (
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
@@ -119,40 +159,8 @@ const DataTable = <TData, TValue>({
                   </div>
                 </TableCell>
               </TableRow>
-            )}
-            {!loading && table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className={cn(
-                        'whitespace-nowrap',
-                        cell.column.getIsPinned() === 'right'
-                          ? 'sticky right-0 bg-white drop-shadow-lg'
-                          : ''
-                      )}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
             ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className='h-24 text-center font-semibold text-slate-600'
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
+              renderTableContent(table)
             )}
           </TableBody>
         </Table>
@@ -185,21 +193,42 @@ const DataTable = <TData, TValue>({
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious
-                href='#'
-                className={cn(!paginator?.prevPage && 'cursor-not-allowed')}
+                className={cn(
+                  'cursor-pointer',
+                  !paginator?.prevPage && 'cursor-not-allowed'
+                )}
+                onClick={
+                  paginator?.prevPage
+                    ? () => onPageChange!(paginator?.prevPage ?? paginator.page)
+                    : () => {}
+                }
               />
             </PaginationItem>
             {map(new Array(paginator?.pageCount).fill(''), (_, idx) => (
               <PaginationItem key={idx}>
-                <PaginationLink href='#' isActive={paginator?.page === idx + 1}>
+                <PaginationLink
+                  isActive={paginator?.page === idx + 1}
+                  onClick={
+                    paginator?.page === idx + 1
+                      ? () => {}
+                      : () => onPageChange!(idx + 1)
+                  }
+                >
                   {idx + 1}
                 </PaginationLink>
               </PaginationItem>
             ))}
             <PaginationItem>
               <PaginationNext
-                href='#'
-                className={cn(!paginator?.prevPage && 'cursor-not-allowed')}
+                className={cn(
+                  'cursor-pointer',
+                  !paginator?.nextPage && 'cursor-not-allowed'
+                )}
+                onClick={
+                  paginator?.nextPage
+                    ? () => onPageChange!(paginator?.nextPage ?? paginator.page)
+                    : () => {}
+                }
               />
             </PaginationItem>
           </PaginationContent>

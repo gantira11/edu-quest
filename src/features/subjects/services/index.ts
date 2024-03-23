@@ -12,14 +12,21 @@ export const getListSubject = async ({ queryKey }: { queryKey: (string | IParams
 }
 
 export const getDetailSubject = async ({ queryKey }: { queryKey: (string | undefined)[] }) => {
-  console.log(queryKey[1])
+  return await axiosInstance.get(`${Config.BASE_URL}/subject-detail/${queryKey[1]}`)
 }
 
 export const createSubject = async (data: InferType<typeof subjectSchema>) => {
   return await axiosInstance.post(`${Config.BASE_URL}/create-subject`, data)
 }
 
+export const updateSubject = async ({ id, data }: { id: string, data: InferType<typeof subjectSchema> }) => {
+  return await axiosInstance.put(`${Config.BASE_URL}/subject-update/${id}`, data)
+}
+
 export const deleteVideoSubject = async (id: string) => {
   return await axiosInstance.delete(`${Config.BASE_URL}/video-delete/${id}`)
 }
 
+export const deleteSubject = async (id: string) => {
+  return await axiosInstance.delete(`${Config.BASE_URL}/subject-delete/${id}`)
+}

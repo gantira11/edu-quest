@@ -1,17 +1,18 @@
 import Cookies from 'js-cookie';
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { createJSONStorage, persist } from 'zustand/middleware'
 import { IUser } from '../utils/interfaces';
 
 interface IAuthStore {
   user?: IUser | null;
   persistUser: (data?: IUser) => void
+  removeUser: () => void
 }
 
 const customStorage = {
   getItem: (key: string) => {
     const value = Cookies.get(key);
-    return value || null;
+    return value ?? null;
   },
   setItem: (key: string, value: string) => {
     Cookies.set(key, value);
@@ -25,11 +26,12 @@ export const useAuthStore = create<IAuthStore>()(
   persist(
     (set) => ({
       user: null,
-      persistUser: (data) => set({ user: data })
+      persistUser: (data) => set({ user: data }),
+      removeUser: () => set({ user: null })
     }),
     {
       name: 'user',
-      getStorage: () => customStorage,
+      storage: createJSONStorage(() => customStorage),
     }
   )
 )

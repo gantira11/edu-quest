@@ -16,8 +16,18 @@ import {
   RiSurveyLine,
   RiUser3Line,
 } from '@remixicon/react';
+import { useQuery } from '@tanstack/react-query';
+import { getDashboard } from '../services';
 
 const Dashboard = () => {
+  const { data } = useQuery({
+    queryKey: ['GET_DASHBOARD'],
+    queryFn: getDashboard,
+    select: (data) => data?.data.data,
+  });
+
+  console.log(data);
+
   return (
     <div className='flex flex-col gap-5'>
       <Breadcrumb>
@@ -28,7 +38,7 @@ const Dashboard = () => {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className='grid grid-cols-4 gap-4'>
+      <div className='grid grid-cols-1 gap-4 lg:grid-cols-4'>
         <Card className='shadow-md'>
           <CardHeader>
             <CardTitle className='flex items-center justify-between'>

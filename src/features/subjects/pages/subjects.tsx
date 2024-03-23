@@ -1,34 +1,51 @@
-import DataTable from '@/shared/components/data-table';
-import { Button } from '@/shared/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/shared/components/ui/card';
-import { Input } from '@/shared/components/ui/input';
-import { IParams } from '@/shared/utils/interfaces';
+import { useCallback, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { enqueueSnackbar } from 'notistack';
+import { debounce } from 'lodash';
+import { ColumnDef } from '@tanstack/react-table';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   RiDeleteBinLine,
   RiEditLine,
   RiEyeLine,
   RiSearchLine,
 } from '@remixicon/react';
-import { useQuery } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
-import { getListSubject } from '../services';
-import { ColumnDef } from '@tanstack/react-table';
+
+import DataTable from '@/shared/components/data-table';
 import Breadcrumbs from '@/shared/components/breadcrumbs';
-import { debounce } from 'lodash';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/shared/components/ui/card';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/shared/components/ui/tooltip';
-import { useNavigate } from 'react-router-dom';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/shared/components/ui/dialog';
+import { Input } from '@/shared/components/ui/input';
+import { Button } from '@/shared/components/ui/button';
+
+import { deleteSubject, getListSubject } from '../services';
+import { ISubject } from '../utils/interfaces';
+
+import { IParams } from '@/shared/utils/interfaces';
+import { queryClient } from '@/App';
 
 const Subjects = () => {
+  const [selectedRow, setSelectedRow] = useState<ISubject | undefined>();
   const [filters, setFilters] = useState<IParams>({
     page: 1,
     limit: 10,
@@ -40,7 +57,9 @@ const Subjects = () => {
   const { data, isLoading } = useQuery({
     queryKey: ['GET_LIST_SUBJECT', filters],
     queryFn: getListSubject,
+    select: (data) => data?.data.data,
   });
+  const mutateDeleteSubject = useMutation({ mutationFn: deleteSubject });
 
   const breadcrumbItem = [
     {
@@ -49,7 +68,21 @@ const Subjects = () => {
     },
   ];
 
-  const columnDef: ColumnDef<any>[] = useMemo(
+  const handleDeleteSubject = useCallback(() => {
+    mutateDeleteSubject.mutate(`${selectedRow?.id}`, {
+      onSuccess: () => {
+        enqueueSnackbar({
+          variant: 'success',
+          message: 'Materi berhasil dihapus',
+        });
+        queryClient.invalidateQueries();
+        setSelectedRow(undefined);
+      },
+      onError: (err) => console.log(err),
+    });
+  }, [selectedRow]);
+
+  const columnDef: ColumnDef<ISubject>[] = useMemo(
     () => [
       {
         accessorKey: 'id',
@@ -57,7 +90,12 @@ const Subjects = () => {
           return <p className='w-max'>No</p>;
         },
         cell: ({ row }) => {
-          return <p>{row.index + 1}</p>;
+          const no =
+            parseInt(data.paginator.page) * parseInt(data.paginator.limit) -
+            parseInt(data.paginator.limit) +
+            row.index +
+            1;
+          return <p>{no}</p>;
         },
         size: 50,
       },
@@ -82,6 +120,7 @@ const Subjects = () => {
                       size='icon'
                       variant='outline'
                       className='rounded-full'
+                      onClick={() => navigate(`/subjects/${data.id}`)}
                     >
                       <RiEyeLine size={16} />
                     </Button>
@@ -104,13 +143,18 @@ const Subjects = () => {
 
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button
-                      size='icon'
-                      variant='outline'
-                      className='rounded-full'
-                    >
-                      <RiDeleteBinLine size={16} />
-                    </Button>
+                    <DialogTrigger asChild>
+                      <Button
+                        size='icon'
+                        variant='outline'
+                        className='rounded-full'
+                        onClick={() => {
+                          setSelectedRow(data);
+                        }}
+                      >
+                        <RiDeleteBinLine size={16} />
+                      </Button>
+                    </DialogTrigger>
                   </TooltipTrigger>
                   <TooltipContent className='bg-black'>Delete</TooltipContent>
                 </Tooltip>
@@ -120,7 +164,7 @@ const Subjects = () => {
         },
       },
     ],
-    []
+    [data?.paginator]
   );
 
   return (
@@ -148,7 +192,7 @@ const Subjects = () => {
                 )}
               />
               <RiSearchLine
-                className='absolute left-2 top-[9px] text-gray-500'
+                className='absolute left-2 top-[9px] text-gray-500 '
                 size={18}
               />
             </div>
@@ -156,13 +200,40 @@ const Subjects = () => {
               Tambah Data
             </Button>
           </div>
-          <DataTable
-            columns={columnDef}
-            data={data?.data?.data?.subjects}
-            loading={isLoading}
-            paginator={data?.data.data.paginator}
-            onLimitChange={(e) => setFilters((prev) => ({ ...prev, limit: e }))}
-          />
+          <Dialog>
+            <DataTable
+              columns={columnDef}
+              data={data?.subjects}
+              loading={isLoading}
+              paginator={data?.paginator}
+              onLimitChange={(e) =>
+                setFilters((prev) => ({ ...prev, limit: e }))
+              }
+              onPageChange={(e) => setFilters((prev) => ({ ...prev, page: e }))}
+            />
+
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Delete data</DialogTitle>
+                <DialogDescription>
+                  Apakah anda yakin delete data ini?
+                </DialogDescription>
+              </DialogHeader>
+
+              <DialogFooter className='flex justify-end gap-1'>
+                <DialogClose asChild>
+                  <Button size='sm' variant='outline'>
+                    Tidak
+                  </Button>
+                </DialogClose>
+                <DialogClose asChild>
+                  <Button size='sm' onClick={handleDeleteSubject}>
+                    Ya
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </CardContent>
       </Card>
     </div>

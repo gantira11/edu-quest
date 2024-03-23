@@ -45,6 +45,26 @@ const Router = () => {
             }
           )}
         </Route>
+        <Route element={<CmsLayout />}>
+          {map(
+            filter(router, (route: IRoute) => route.layout === 'student'),
+            (route: IRoute) => {
+              const Component = route.component;
+              return (
+                <Route
+                  key={route.id}
+                  path={route.path}
+                  element={
+                    <ProtectedRoute
+                      element={<Component />}
+                      rolePermission={route.permission}
+                    />
+                  }
+                />
+              );
+            }
+          )}
+        </Route>
       </Routes>
     </BrowserRouter>
   );

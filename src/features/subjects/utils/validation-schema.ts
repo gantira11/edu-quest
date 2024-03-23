@@ -5,9 +5,9 @@ export const subjectSchema = yup.object({
   content: yup.string().required().label('Content'),
   videos: yup.array(
     yup.object({
-      videoi_id: yup.string().notRequired(),
+      video_id: yup.string().notRequired(),
       name: yup.string().required().label('Nama'),
-      file_url: yup.string().required().label('File harus diisi'),
+      file_url: yup.string().required().label('File'),
     })
   ),
 });

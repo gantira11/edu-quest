@@ -25,7 +25,7 @@ const InputForm: React.FC<IInputForm> = ({
       name={name}
       defaultValue=''
       render={({ field, fieldState }) => (
-        <div className='flex flex-col gap-1'>
+        <div className='flex flex-col gap-2'>
           <div className='flex items-start gap-1'>
             <Label>{label}</Label>
             {required && <Label className='text-sm text-red-600'>*</Label>}

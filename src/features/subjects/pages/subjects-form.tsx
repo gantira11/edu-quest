@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import Breadcrumbs from '@/shared/components/breadcrumbs';
@@ -9,7 +9,6 @@ import {
   CardTitle,
 } from '@/shared/components/ui/card';
 
-import * as yup from 'yup';
 import {
   Controller,
   FormProvider,
@@ -27,8 +26,14 @@ import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { subjectSchema } from '../utils/validation-schema';
 import { RiAddLine, RiDeleteBinLine } from '@remixicon/react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { createSubject, getDetailSubject } from '../services';
+import {
+  createSubject,
+  deleteVideoSubject,
+  getDetailSubject,
+  updateSubject,
+} from '../services';
 import { enqueueSnackbar } from 'notistack';
+import { InferType } from 'yup';
 
 const SubjectForm = () => {
   const navigate = useNavigate();
@@ -53,7 +58,7 @@ const SubjectForm = () => {
     defaultValues: {
       videos: [
         {
-          videoi_id: '',
+          video_id: '',
           name: '',
           file_url: '',
         },
@@ -67,25 +72,59 @@ const SubjectForm = () => {
     name: 'videos',
   });
 
-  useQuery({
+  const query = useQuery({
     queryKey: ['GET_DETAIL_SUBJECT', params.id],
     queryFn: getDetailSubject,
+    select: (data) => data.data,
+    enabled: !!params.id,
   });
 
   const mutateSubject = useMutation({ mutationFn: createSubject });
+  const mutateUpdateSubject = useMutation({ mutationFn: updateSubject });
+  const mutateDeleteVideo = useMutation({ mutationFn: deleteVideoSubject });
 
-  const onSubmit = (data: yup.InferType<typeof subjectSchema>) => {
+  const onSubmit = (data: InferType<typeof subjectSchema>) => {
+    if (params.id) {
+      const newVideo = data.videos?.filter((video) => video.video_id === '');
+
+      const payload: InferType<typeof subjectSchema> = {
+        name: data.name,
+        content: data.content,
+        videos: newVideo,
+      };
+
+      mutateUpdateSubject.mutate(
+        { id: params.id, data: payload },
+        {
+          onSuccess: () => {
+            enqueueSnackbar({
+              variant: 'success',
+              message: 'Materi berhasil diubah',
+            });
+            navigate(-1);
+          },
+          onError: () => {
+            enqueueSnackbar({
+              variant: 'error',
+              message: 'Materi gagal diubah',
+            });
+          },
+        }
+      );
+
+      return;
+    }
+
     mutateSubject.mutate(data, {
-      onSuccess: (res) => {
-        console.log(res);
+      onSuccess: () => {
         enqueueSnackbar({
           variant: 'success',
           message: 'Materi berhasil disimpan',
         });
         navigate(-1);
       },
-      onError: (err) => {
-        enqueueSnackbar({ variant: 'error', message: 'Terjadi kesalahan' });
+      onError: () => {
+        enqueueSnackbar({ variant: 'error', message: 'Materi gagal disimpan' });
       },
     });
   };
@@ -113,6 +152,26 @@ const SubjectForm = () => {
     );
   };
 
+  const handleDeleteVideo = (id: string, index: number) => {
+    if (id) {
+      mutateDeleteVideo.mutate(id, { onSuccess: () => remove(index) });
+    }
+    remove(index);
+  };
+
+  useEffect(() => {
+    if (query.data) {
+      methods.reset({
+        ...query.data.data,
+        videos: query.data.data.videos.map((video: any) => ({
+          video_id: video.id,
+          name: video.name,
+          file_url: video.file_url,
+        })),
+      });
+    }
+  }, [query.data]);
+
   return (
     <div className='flex flex-col gap-5'>
       <Breadcrumbs items={breadcrumbItem} />
@@ -137,10 +196,7 @@ const SubjectForm = () => {
                     <Label>Content</Label>
                     <Editor
                       value={field.value}
-                      onChange={(
-                        e: string
-                        // editor: ReactQuill.UnprivilegedEditor
-                      ) => {
+                      onChange={(e: string) => {
                         field.onChange(e);
                       }}
                     />
@@ -170,7 +226,9 @@ const SubjectForm = () => {
                         render={({ field, fieldState }) => (
                           <div>
                             <Input
-                              type='file'
+                              type={field.value ? 'text' : 'file'}
+                              value={field.value}
+                              disabled={!!field.value}
                               className='mt-1 w-full pt-[6px]'
                               onChange={(e) => {
                                 handleUploadFirebase(
@@ -188,18 +246,18 @@ const SubjectForm = () => {
                         )}
                       />
                     </div>
-                    {index > 0 && (
-                      <div>
-                        <Button
-                          size='icon'
-                          className='mt-1 h-9 w-9'
-                          type='button'
-                          onClick={() => remove(index)}
-                        >
-                          <RiDeleteBinLine size={16} />
-                        </Button>
-                      </div>
-                    )}
+                    <div>
+                      <Button
+                        size='icon'
+                        className='mt-1 h-9 w-9'
+                        type='button'
+                        onClick={() =>
+                          handleDeleteVideo(field.video_id as string, index)
+                        }
+                      >
+                        <RiDeleteBinLine size={16} />
+                      </Button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -210,7 +268,7 @@ const SubjectForm = () => {
                   type='button'
                   onClick={() =>
                     append({
-                      videoi_id: '',
+                      video_id: '',
                       name: '',
                       file_url: '',
                     })
@@ -222,7 +280,7 @@ const SubjectForm = () => {
                 </Button>
               </div>
               <div className='flex justify-end'>
-                <Button>Simpan</Button>
+                <Button>{params.id ? 'Ubah' : 'Simpan'}</Button>
               </div>
             </form>
           </FormProvider>

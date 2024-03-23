@@ -48,10 +48,11 @@ const LoginForm = () => {
         persistUser(res.data.data);
         if (res.data.data.role.name === 'admin') {
           navigate('/dashboard', { replace: true });
-          return;
+        } else {
+          navigate('/student/home', { replace: true });
         }
       },
-      onError: (err) =>
+      onError: () =>
         enqueueSnackbar({
           variant: 'error',
           message: 'Username atau password salah',
