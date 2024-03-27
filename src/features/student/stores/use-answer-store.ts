@@ -19,7 +19,7 @@ export const useAnswerStore = create<AnswerStore>()(
     answer: [],
     setAnswer: (data) => {
       const answer = data.map((question) => ({
-        question_id: question.id,
+        quetion_id: question.id,
         option_id: undefined,
       }));
       set({ answer });

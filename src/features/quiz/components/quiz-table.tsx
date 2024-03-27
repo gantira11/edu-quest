@@ -59,7 +59,11 @@ const QuizTable: FC<QuizTableProps> = ({ subject }) => {
 
   const mutateDeleteQuiz = useMutation({ mutationFn: deleteQuiz });
 
-  const { data: quiz, isLoading } = useQuery({
+  const {
+    data: quiz,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ['GET_LIST_QUIZ', filters],
     queryFn: getListQuiz,
     select: (data) => data.data.data,
@@ -175,6 +179,7 @@ const QuizTable: FC<QuizTableProps> = ({ subject }) => {
         });
         setSelectedRow(undefined);
         queryClient.invalidateQueries();
+        refetch();
       },
     });
   };

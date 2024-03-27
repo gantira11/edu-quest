@@ -12,6 +12,8 @@ const QuizDetail = lazy(() => import('@features/quiz/pages/quiz-detail'))
 const Users = lazy(() => import('@features/user/pages/users'))
 const UsersForm = lazy(() => import('@features/user/pages/users-form'))
 
+const Reports = lazy(() => import('@features/answer/pages/answers'))
+
 export const cmsRoute = [
   {
     id: 'dashboard-page',
@@ -87,6 +89,13 @@ export const cmsRoute = [
     id: 'users-form-edit-page',
     path: '/users/form/:id',
     component: UsersForm,
+    layout: 'cms',
+    permission: ['admin']
+  },
+  {
+    id: 'users-reports-page',
+    path: '/reports',
+    component: Reports,
     layout: 'cms',
     permission: ['admin']
   },

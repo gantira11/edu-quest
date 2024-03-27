@@ -1,9 +1,11 @@
 import { useSidebarStore } from '@/shared/stores/sidebar-store';
 import {
   RiBookLine,
+  RiBrainLine,
   RiContactsBook2Line,
   RiContactsLine,
   RiDashboardLine,
+  RiFileChartLine,
   RiHomeLine,
   RiSurveyLine,
   RiTodoLine,
@@ -42,6 +44,12 @@ const menus: Menu[] = [
     path: '/users',
     icon: <RiUser3Line size={18} />,
   },
+  {
+    id: 'reports-menu',
+    name: 'Report',
+    path: '/reports',
+    icon: <RiFileChartLine size={18} />,
+  },
   // {
   //   id: 'roles-menu',
   //   name: 'Manajemen Role',
@@ -56,6 +64,12 @@ const studentMenus: Menu[] = [
     name: 'Home',
     path: '/student/home',
     icon: <RiHomeLine size={18} />,
+  },
+  {
+    id: 'simulation-menu',
+    name: 'Simulasi Rangkaian Dasar Kelistrikan',
+    path: '/student/simulation',
+    icon: <RiBrainLine size={18} />,
   },
   {
     id: 'subject-menu',

@@ -33,7 +33,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/shared/components/ui/tooltip';
-import { queryClient } from '@/main';
+// import { queryClient } from '@/main';
 
 const Users = () => {
   const breadcrumbs = useMemo(
@@ -55,7 +55,7 @@ const Users = () => {
 
   const navigate = useNavigate();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['GET_LIST_USER', filters],
     queryFn: getListUser,
     select: (data) => data?.data?.data,
@@ -145,7 +145,8 @@ const Users = () => {
   const handleDeleteUser = () => {
     mutateDeleteUser.mutate(selectedRow?.id, {
       onSuccess: () => {
-        queryClient.invalidateQueries();
+        // queryClient.invalidateQueries();
+        refetch();
       },
       onError: () => {},
     });

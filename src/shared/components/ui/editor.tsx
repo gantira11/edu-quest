@@ -47,7 +47,7 @@ const Editor = ({ ...rest }) => {
       modules={modules}
       formats={formats}
       {...rest}
-      onChange={(value, delta, source, editor) => {
+      onChange={(value, _, __, editor) => {
         rest.onChange(value, editor);
       }}
     />

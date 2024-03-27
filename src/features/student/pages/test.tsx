@@ -3,15 +3,19 @@ import Breadcrumbs from '@/shared/components/breadcrumbs';
 import { Button } from '@/shared/components/ui/button';
 import { Card } from '@/shared/components/ui/card';
 import { cn } from '@/shared/utils/cn';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { map } from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useAnswerStore } from '../stores/use-answer-store';
+import { submitAnswer } from '../services';
+import { enqueueSnackbar } from 'notistack';
 
 const Test = () => {
   const params = useParams();
   const navigate = useNavigate();
+
+  const location = useLocation();
 
   const { data } = useQuery({
     queryKey: ['GET_DETAIL_QUIZ', params.quizId],
@@ -40,9 +44,13 @@ const Test = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | undefined>();
 
+  const isEvaluasi = location.pathname.split('/').includes('evaluasi');
+
   const answer = useAnswerStore((state) => state.answer);
   const setAnswer = useAnswerStore((state) => state.setAnswer);
   const assignOption = useAnswerStore((state) => state.assignOption);
+
+  const mutateSubmitAnswer = useMutation({ mutationFn: submitAnswer });
 
   const handlePrevQuestion = () => {
     setSelectedIndex((prev) => prev - 1);
@@ -57,6 +65,29 @@ const Test = () => {
 
   const handleSubmitQuestion = () => {
     assignOption(selectedIndex, selectedOption);
+
+    if (isEvaluasi) {
+      const payload = {
+        quiz_id: params.quizId,
+        quetions: answer,
+      };
+
+      mutateSubmitAnswer.mutate(payload, {
+        onSuccess: () => {
+          enqueueSnackbar({
+            variant: 'success',
+            message: 'Berhasil submit quiz',
+          });
+
+          navigate('result');
+        },
+        onError: () => {
+          enqueueSnackbar({ variant: 'error', message: 'Gagal submit quiz' });
+        },
+      });
+
+      return;
+    }
 
     navigate('result');
   };

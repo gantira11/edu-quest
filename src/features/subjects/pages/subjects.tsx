@@ -42,7 +42,6 @@ import { deleteSubject, getListSubject } from '../services';
 import { ISubject } from '../utils/interfaces';
 
 import { IParams } from '@/shared/utils/interfaces';
-import { queryClient } from '@/App';
 
 const Subjects = () => {
   const [selectedRow, setSelectedRow] = useState<ISubject | undefined>();
@@ -54,7 +53,7 @@ const Subjects = () => {
 
   const navigate = useNavigate();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['GET_LIST_SUBJECT', filters],
     queryFn: getListSubject,
     select: (data) => data?.data.data,
@@ -75,7 +74,8 @@ const Subjects = () => {
           variant: 'success',
           message: 'Materi berhasil dihapus',
         });
-        queryClient.invalidateQueries();
+        refetch();
+        // queryClient.refetchQueries();
         setSelectedRow(undefined);
       },
       onError: (err) => console.log(err),
@@ -125,7 +125,7 @@ const Subjects = () => {
                       <RiEyeLine size={16} />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent className='bg-black'>Edit</TooltipContent>
+                  <TooltipContent className='bg-black'>Detail</TooltipContent>
                 </Tooltip>
                 <Tooltip>
                   <TooltipTrigger asChild>

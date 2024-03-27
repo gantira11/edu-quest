@@ -8,17 +8,21 @@ import { useQuery } from '@tanstack/react-query';
 import { debounce, map } from 'lodash';
 import { useMemo, useState } from 'react';
 import MateriImg from '@/assets/materi.svg';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const PraTest = () => {
+  const location = useLocation();
+
+  const isEvaluasi = location.pathname.split('/').includes('evaluasi');
+
   const breadcrumbs = useMemo(
     () => [
       {
-        label: 'Materi',
+        label: isEvaluasi ? 'Evaluasi' : 'Pra Test',
         path: '',
       },
     ],
-    []
+    [isEvaluasi]
   );
 
   // ===================

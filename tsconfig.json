@@ -35,7 +35,10 @@
       "@shared/*": [
         "./src/shared/*"
       ],
-    }
+    },
+    "types": [
+      "vite-plugin-pwa/client"
+    ]
   },
   "include": [
     "src"

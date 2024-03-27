@@ -9,6 +9,7 @@ import { debounce, map } from 'lodash';
 import { useMemo, useState } from 'react';
 import VideoImg from '@/assets/video.svg';
 import { useNavigate } from 'react-router-dom';
+import { ISubject } from '@/features/subjects/utils/interfaces';
 
 const Videos = () => {
   const breadcrumbs = useMemo(
@@ -62,13 +63,14 @@ const Videos = () => {
         />
       </div>
       <div className='grid grid-cols-1 gap-6 lg:grid-cols-4'>
-        {map(data?.subjects, (subject) => (
+        {map(data?.subjects, (subject: ISubject) => (
           <Card
             className='flex cursor-pointer flex-col items-center justify-center hover:bg-slate-50'
             onClick={() => navigate(`${subject.id}`)}
+            key={subject.id}
           >
             <CardHeader>
-              <img src={VideoImg} width={120} height={120} />
+              <img src={VideoImg} width={120} height={120} alt='video ' />
             </CardHeader>
             <CardContent>
               <p className='text-sm font-medium'>{subject.name}</p>

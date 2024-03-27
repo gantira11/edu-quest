@@ -108,6 +108,7 @@ const QuizForm = () => {
       const payload: InferType<typeof quizSchema> = {
         name: data.name,
         // subject_id: '',
+        duration: data.duration,
         quetions: data.quetions?.map((question) => ({
           id: question.id,
           name: question.name,
@@ -164,6 +165,8 @@ const QuizForm = () => {
     }
   }, [data]);
 
+  console.log(methods.formState.errors);
+
   return (
     <div className='flex flex-col gap-5'>
       <Breadcrumbs items={breadcrumbs} />
@@ -180,6 +183,16 @@ const QuizForm = () => {
               onSubmit={methods.handleSubmit(onSubmit)}
             >
               <InputForm label='Nama Quiz' name='name' placeholder='Quiz' />
+              <InputForm
+                label='Durasi (Menit)'
+                name='duration'
+                placeholder='Durasi'
+                onKeyPress={(event) => {
+                  if (!/[0-9]/.test(event.key)) {
+                    event.preventDefault();
+                  }
+                }}
+              />
 
               {fields.map((field, index) => (
                 <div className='flex flex-col gap-5' key={field.id}>

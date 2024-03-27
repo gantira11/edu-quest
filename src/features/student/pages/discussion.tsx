@@ -48,6 +48,8 @@ const Discussion = () => {
 
   const [selectedIndex, setSelectedIndex] = useState(0);
 
+  const isEvaluasi = location.pathname.split('/').includes('evaluasi');
+
   const answer = useAnswerStore((state) => state.answer);
   const resetState = useAnswerStore((state) => state.resetState);
 
@@ -61,6 +63,15 @@ const Discussion = () => {
 
   const handleBack = () => {
     resetState();
+
+    if (isEvaluasi) {
+      navigate(`/student/evaluasi/${params.id}/quizzes`, {
+        replace: true,
+      });
+
+      return;
+    }
+
     navigate(`/student/pra-tests/${params.id}/quizzes`, {
       replace: true,
     });

@@ -54,11 +54,11 @@ const Results = () => {
     let point = 0;
 
     for (let i = 0; i < data?.quetions.length; i++) {
-      const isCorrect = data?.quetions[1].options.find(
+      const isCorrect = data?.quetions[1]?.options?.find(
         (option: Option) => option.is_correct === true
       );
 
-      if (isCorrect.id === answer[i]?.option_id) {
+      if (isCorrect?.id === answer[i]?.option_id) {
         point = point + 1;
       }
     }
