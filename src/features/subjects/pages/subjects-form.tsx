@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import Breadcrumbs from '@/shared/components/breadcrumbs';
@@ -128,7 +128,6 @@ const SubjectForm = () => {
       },
     });
   };
-
 
   const handleUploadFirebase = (
     field: any,
