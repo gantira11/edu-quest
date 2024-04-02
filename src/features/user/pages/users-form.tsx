@@ -91,14 +91,18 @@ const UsersForm = () => {
 
             navigate(-1);
           },
-          onError: () => {
+          onError: (err) => {
             enqueueSnackbar({
               variant: 'error',
-              message: 'User gagal diubah',
+              message:
+                (err as any)?.response?.data?.meta?.message ??
+                'User gagal diubah ',
             });
           },
         }
       );
+
+      return;
     }
 
     mutateCreateUser.mutate(data, {
@@ -121,10 +125,14 @@ const UsersForm = () => {
 
   useEffect(() => {
     if (data) {
-      methods.reset({ ...data, password: '' });
+      methods.reset({
+        name: data?.name,
+        username: data?.username,
+        role_id: data?.role_id,
+        password: undefined,
+      });
     }
   }, [data]);
-
 
   return (
     <div className='flex flex-col gap-5'>
@@ -158,7 +166,7 @@ const UsersForm = () => {
                     render={({ field, fieldState }) => (
                       <>
                         <Select
-                          onValueChange={field.onChange}
+                          onValueChange={(e) => field.onChange(e)}
                           value={field.value}
                         >
                           <SelectTrigger

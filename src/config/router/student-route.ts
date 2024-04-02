@@ -20,6 +20,8 @@ const StudentDisccusion = lazy(() => import('@features/student/pages/discussion'
 
 const StudentSimulation = lazy(() => import('@features/student/pages/simulation'))
 
+const AboutUs = lazy(() => import('@features/student/pages/about-us'))
+
 export const studentRoute = [
   {
     id: 'home-page',
@@ -130,6 +132,13 @@ export const studentRoute = [
     id: 'student-simulation-page',
     path: '/student/simulation',
     component: StudentSimulation,
+    layout: 'student',
+    permission: ['student']
+  },
+  {
+    id: 'student-about-us-page',
+    path: '/student/about-us',
+    component: AboutUs,
     layout: 'student',
     permission: ['student']
   },

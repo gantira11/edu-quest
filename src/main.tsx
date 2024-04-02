@@ -15,6 +15,10 @@ setLocale(customValidationMessage);
 export const queryClient = new QueryClient();
 
 if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker-files.js');
+  });
+
   const updateSW = registerSW({
     onNeedRefresh() {
       updateSW(true);
@@ -23,7 +27,7 @@ if ('serviceWorker' in navigator) {
     onOfflineReady() {
       console.log('OFFLINE READY');
     },
-    
+
     immediate: true,
   });
 }

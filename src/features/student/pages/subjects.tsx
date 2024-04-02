@@ -69,7 +69,7 @@ const Subjects = () => {
             onClick={() => navigate(`${subject.id}`)}
           >
             <CardHeader>
-              <img src={MateriImg} width={120} height={120} />
+              <img src={MateriImg} width={120} height={120} alt='materi' />
             </CardHeader>
             <CardContent>
               <p className='text-sm font-medium'>{subject.name}</p>

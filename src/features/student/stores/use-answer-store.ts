@@ -4,7 +4,7 @@ import { persist } from "zustand/middleware";
 
 interface Answer {
   quetions_id?: string,
-  option_id?: string
+  option_id?: string | null
 }
 
 interface AnswerStore {
@@ -20,7 +20,7 @@ export const useAnswerStore = create<AnswerStore>()(
     setAnswer: (data) => {
       const answer = data.map((question) => ({
         quetion_id: question.id,
-        option_id: undefined,
+        option_id: null ?? undefined,
       }));
       set({ answer });
     },

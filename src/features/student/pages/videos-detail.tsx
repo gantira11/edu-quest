@@ -11,7 +11,6 @@ import { useQuery } from '@tanstack/react-query';
 import { map } from 'lodash';
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import ReactPlayer from 'react-player';
 
 const VideosDetail = () => {
   const params = useParams();
@@ -54,20 +53,15 @@ const VideosDetail = () => {
         <CardContent>
           {map(data?.videos, (video) => (
             <Card
-              className='flex w-full flex-col overflow-hidden rounded-sm lg:w-max'
+              className='flex w-full flex-col gap-2 overflow-hidden rounded-sm lg:w-max'
               key={video.id}
             >
-              {/* <iframe
-                title={video.id}
-                src={video.file_url}
-                className='aspect-auto'
-                allowFullScreen
-              ></iframe> */}
-              {/* <video>
-                <source src={video.url} type='video/mp4' />
-              </video> */}
-
-              <ReactPlayer url={video.url} controls width={'100%'} />
+              {/* <video src={video.file_url} controls width={250}></video> */}
+              <video controls width={250}>
+                <source src={video.file_url} type='video/mp4' />
+                <track kind='captions' label='English' />
+                Your browser does not support the video tag.
+              </video>
 
               <CardContent>
                 <p className='text-center text-sm font-medium'>{video.name}</p>

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import Breadcrumbs from '@/shared/components/breadcrumbs';
@@ -24,7 +24,7 @@ import { Button } from '@/shared/components/ui/button';
 import { storage } from '@/config/firebase';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { subjectSchema } from '../utils/validation-schema';
-import { RiAddLine, RiDeleteBinLine } from '@remixicon/react';
+import { RiAddLine, RiDeleteBinLine, RiLoader4Line } from '@remixicon/react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   createSubject,
@@ -129,7 +129,13 @@ const SubjectForm = () => {
     });
   };
 
-  const handleUploadFirebase = (field: any, file: File | null) => {
+  const [loadingUpload, setLoadingUpload] = useState<boolean>();
+
+  const handleUploadFirebase = (
+    field: any,
+    file: File | null,
+    index: number
+  ) => {
     if (!file) return;
 
     const storageRef = ref(storage, `videos/${file.name}`);
@@ -141,7 +147,11 @@ const SubjectForm = () => {
         const progress = Math.round(
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         );
-        console.log(progress);
+        if (progress !== 100) {
+          methods.setValue(`videos.${index}.loading`, true);
+        } else {
+          methods.setValue(`videos.${index}.loading`, false);
+        }
       },
       (error) => console.log(error),
       () => {
@@ -219,33 +229,44 @@ const SubjectForm = () => {
                         placeholder='Nama Video'
                       />
                     </div>
-                    <div className='w-full'>
-                      <Controller
-                        control={methods.control}
-                        name={`videos.${index}.file_url`}
-                        render={({ field, fieldState }) => (
-                          <div>
-                            <Input
-                              type={field.value ? 'text' : 'file'}
-                              value={field.value}
-                              disabled={!!field.value}
-                              className='mt-1 w-full pt-[6px]'
-                              onChange={(e) => {
-                                handleUploadFirebase(
-                                  field,
-                                  e?.target?.files![0]
-                                );
-                              }}
-                            />
-                            {fieldState.invalid && (
-                              <small className='text-xs text-red-600'>
-                                {fieldState.error?.message}
-                              </small>
-                            )}
-                          </div>
-                        )}
-                      />
-                    </div>
+                    {methods.watch(`videos.${index}.loading`) ? (
+                      <div className='flex w-full justify-center'>
+                        <RiLoader4Line
+                          className='animate-spin text-center text-primary'
+                          size={32}
+                        />
+                      </div>
+                    ) : (
+                      <div className='w-full'>
+                        <Controller
+                          control={methods.control}
+                          name={`videos.${index}.file_url`}
+                          render={({ field, fieldState }) => (
+                            <div>
+                              <Input
+                                type={field.value ? 'text' : 'file'}
+                                value={field.value}
+                                disabled={!!field.value}
+                                className='mt-1 w-full pt-[6px]'
+                                onChange={(e) => {
+                                  handleUploadFirebase(
+                                    field,
+                                    e?.target?.files![0],
+                                    index
+                                  );
+                                }}
+                              />
+                              {fieldState.invalid && (
+                                <small className='text-xs text-red-600'>
+                                  {fieldState.error?.message}
+                                </small>
+                              )}
+                            </div>
+                          )}
+                        />
+                      </div>
+                    )}
+
                     <div>
                       <Button
                         size='icon'

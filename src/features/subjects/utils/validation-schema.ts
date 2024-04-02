@@ -8,6 +8,7 @@ export const subjectSchema = yup.object({
       video_id: yup.string().notRequired(),
       name: yup.string().required().label('Nama'),
       file_url: yup.string().required().label('File'),
+      loading: yup.bool().notRequired()
     })
   ),
 });

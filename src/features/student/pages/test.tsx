@@ -100,7 +100,15 @@ const Test = () => {
 
   return (
     <div className='flex flex-col gap-5'>
-      <Breadcrumbs items={breadcrumbs} />
+      <div className='flex items-center justify-between'>
+        <Breadcrumbs items={breadcrumbs} />
+        {isEvaluasi && data ? (
+          <Countdown
+            minutes={data?.duration ?? 0}
+            handleSubmitQuestion={handleSubmitQuestion}
+          />
+        ) : null}
+      </div>
 
       <Card className='flex flex-col gap-8 p-4'>
         <div
@@ -146,6 +154,46 @@ const Test = () => {
           {selectedIndex < data?.quetions.length - 1 ? 'Selanjutnya' : 'Submit'}
         </Button>
       </div>
+    </div>
+  );
+};
+
+interface CountdownProps {
+  minutes: number;
+  handleSubmitQuestion: () => void;
+}
+
+const Countdown: React.FC<CountdownProps> = ({
+  minutes,
+  handleSubmitQuestion,
+}) => {
+  const [seconds, setSeconds] = useState(minutes * 60);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (seconds > 0) {
+        setSeconds(seconds - 1);
+      }
+    }, 1000);
+
+    if (seconds === 0) {
+      handleSubmitQuestion();
+    }
+
+    return () => clearInterval(interval);
+  }, [seconds]);
+
+  const formatTime = (time: number): string => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  return (
+    <div>
+      <p className='text-sm font-medium'>
+        Time Remaining: {formatTime(seconds)}
+      </p>
     </div>
   );
 };
