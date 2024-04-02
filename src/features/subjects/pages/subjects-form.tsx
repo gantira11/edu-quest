@@ -129,7 +129,6 @@ const SubjectForm = () => {
     });
   };
 
-  const [loadingUpload, setLoadingUpload] = useState<boolean>();
 
   const handleUploadFirebase = (
     field: any,
