@@ -7,25 +7,31 @@ import {
   CardTitle,
 } from '@/shared/components/ui/card';
 import { Input } from '@/shared/components/ui/input';
+import NoData from '@/shared/components/ui/no-data';
 import { IParams } from '@/shared/utils/interfaces';
 import { RiSearchLine } from '@remixicon/react';
 import { useQuery } from '@tanstack/react-query';
 import { debounce, map } from 'lodash';
 import { useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const Quizzes = () => {
   const params = useParams();
   const navigate = useNavigate();
+
+  const location = useLocation();
+
+  const isEvaluasi = location.pathname.split('/').includes('evaluasi');
 
   const [filters, setFilters] = useState<IParams>({
     id: params.id,
     page: 1,
     limit: 10,
     keyword: '',
+    category: isEvaluasi ? 'Evaluasi' : 'Pra Test',
   });
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['GET_LIST_QUIZ', filters],
     queryFn: getListQuiz,
     select: (data) => data?.data?.data,
@@ -34,12 +40,12 @@ const Quizzes = () => {
   const breadcrumbs = useMemo(
     () => [
       {
-        label: 'Pra Test',
-        path: '/student/pra-tests',
+        label: isEvaluasi ? 'Evaluasi' : 'Pra Test',
+        path: isEvaluasi ? '/student/evaluasi' : '/student/pra-tests',
       },
       {
         label: 'Quiz',
-        path: 'pra-tests',
+        path: '',
       },
     ],
     []
@@ -69,22 +75,29 @@ const Quizzes = () => {
         />
       </div>
 
-      <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>
-        {map(data?.quizzes, (quiz) => (
-          <Card
-            className='cursor-pointer hover:bg-slate-50'
-            key={quiz.id}
-            onClick={() => navigate(`${quiz?.id}`)}
-          >
-            <CardHeader>
-              <CardTitle>{quiz.name}</CardTitle>
-              <CardDescription>
-                Total Pertanyaan: {quiz.total_quetions}
-              </CardDescription>
-            </CardHeader>
-          </Card>
-        ))}
-      </div>
+      {!isLoading ? (
+        data?.quizzes.length > 0 ? (
+          <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>
+            {map(data?.quizzes, (quiz) => (
+              <Card
+                className='cursor-pointer hover:bg-slate-50'
+                key={quiz.id}
+                onClick={() => navigate(`${quiz?.id}`)}
+              >
+                <CardHeader>
+                  <CardTitle>{quiz.name}</CardTitle>
+                  <CardDescription>
+                    Total Pertanyaan: {quiz.total_quetions}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <NoData />
+        )
+      ) : null}
+      {}
     </div>
   );
 };

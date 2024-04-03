@@ -68,7 +68,7 @@ const AboutUs = () => {
 
           <div className='flex flex-col items-center gap-5'>
             <h4 className='text-lg font-medium'>Dibimbing Oleh: </h4>
-            <div className='flex justify-center gap-10'>
+            <div className='flex flex-col lg:flex-row justify-center gap-10'>
               <div className='flex flex-col'>
                 <h5 className='font-semibold'>Pembimbing 1</h5>
                 <p>Drs. Ir. Tatang Permana, M.Pd</p>

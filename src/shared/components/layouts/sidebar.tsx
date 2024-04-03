@@ -104,7 +104,7 @@ const studentMenus: Menu[] = [
   {
     id: 'contact-menu',
     name: 'Kontak Kami',
-    path: '/student/contacts',
+    path: '/student/contact-us',
     icon: <RiContactsBook2Line size={18} />,
   },
 ];

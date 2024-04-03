@@ -11,7 +11,7 @@ import { Checkbox } from '@/shared/components/ui/checkbox';
 import Editor from '@/shared/components/ui/editor';
 import { cn } from '@/shared/utils/cn';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Label } from '@radix-ui/react-label';
+
 import { RiAddLine, RiDeleteBin2Line } from '@remixicon/react';
 import { useCallback, useEffect, useMemo } from 'react';
 import {
@@ -35,6 +35,15 @@ import {
 } from '../services';
 import { enqueueSnackbar } from 'notistack';
 import { queryClient } from '@/main';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/shared/components/ui/select';
+import { Label } from '@/shared/components/ui/label';
 
 const QuizForm = () => {
   const location = useLocation();
@@ -109,6 +118,7 @@ const QuizForm = () => {
         name: data.name,
         // subject_id: '',
         duration: data.duration,
+        category: data?.category,
         quetions: data.quetions?.map((question) => ({
           id: question.id,
           name: question.name,
@@ -193,6 +203,43 @@ const QuizForm = () => {
                   }
                 }}
               />
+              <div className='flex flex-col gap-2'>
+                <Label>Tipe Quiz</Label>
+                <Controller
+                  control={methods.control}
+                  name='category'
+                  render={({ field, fieldState }) => (
+                    <div>
+                      <Select
+                        onValueChange={(e) => field.onChange(e)}
+                        value={field.value}
+                      >
+                        <SelectTrigger
+                          className={cn(
+                            fieldState.invalid && 'border-2 border-red-600'
+                          )}
+                        >
+                          <SelectValue
+                            placeholder='Pilih Tipe Quiz'
+                            className='placeholder:text-slate-200'
+                          />
+                        </SelectTrigger>
+                        <SelectContent className='w-max'>
+                          <SelectGroup>
+                            <SelectItem value='Pra Test'>Pra Test</SelectItem>
+                            <SelectItem value='Evaluasi'>Evaluasi</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                      {fieldState.invalid && (
+                        <small className='text-xs text-red-600'>
+                          {fieldState.error?.message}
+                        </small>
+                      )}
+                    </div>
+                  )}
+                />
+              </div>
 
               {fields.map((field, index) => (
                 <div className='flex flex-col gap-5' key={field.id}>

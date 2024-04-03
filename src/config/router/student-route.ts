@@ -21,6 +21,7 @@ const StudentDisccusion = lazy(() => import('@features/student/pages/discussion'
 const StudentSimulation = lazy(() => import('@features/student/pages/simulation'))
 
 const AboutUs = lazy(() => import('@features/student/pages/about-us'))
+const ContactUs = lazy(() => import('@features/student/pages/contact-us'))
 
 export const studentRoute = [
   {
@@ -139,6 +140,13 @@ export const studentRoute = [
     id: 'student-about-us-page',
     path: '/student/about-us',
     component: AboutUs,
+    layout: 'student',
+    permission: ['student']
+  },
+  {
+    id: 'student-contact-us-page',
+    path: '/student/contact-us',
+    component: ContactUs,
     layout: 'student',
     permission: ['student']
   },

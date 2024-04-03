@@ -1,7 +1,7 @@
 import Breadcrumbs from '@/shared/components/breadcrumbs';
 import { useMemo } from 'react';
 
-import HomeImg from '@/assets/home.svg';
+import HomeImg from '@/assets/home.png';
 
 const Home = () => {
   const breadcrumbs = useMemo(
@@ -20,10 +20,11 @@ const Home = () => {
 
       <div className='flex flex-grow flex-col items-center justify-center'>
         <div className='flex w-full flex-grow flex-col-reverse items-center justify-center gap-10 text-center lg:flex-row lg:text-end'>
-          <img src={HomeImg} alt='home' width={160} height={160} />
+          <img src={HomeImg} alt='home' width={240} height={240} />
+
           <p className='w-full text-lg lg:w-1/2'>
             Selamat datang di{' '}
-            <b>Web Pembelajaran Sistem Sistem Starter Sepeda Motor</b>
+            <b>Materi Pembelajaran Dasar Elektronika Otomotif</b>
           </p>
         </div>
       </div>

@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/components/ui/card';
+import NoData from '@/shared/components/ui/no-data';
 import { Separator } from '@/shared/components/ui/separator';
 import { useQuery } from '@tanstack/react-query';
 import { map } from 'lodash';
@@ -51,23 +52,29 @@ const VideosDetail = () => {
         <Separator className='mb-10' />
 
         <CardContent>
-          {map(data?.videos, (video) => (
-            <Card
-              className='flex w-full flex-col gap-2 overflow-hidden rounded-sm lg:w-max'
-              key={video.id}
-            >
-              {/* <video src={video.file_url} controls width={250}></video> */}
-              <video controls width={250}>
-                <source src={video.file_url} type='video/mp4' />
-                <track kind='captions' label='English' />
-                Your browser does not support the video tag.
-              </video>
+          {data?.videos.length > 0 ? (
+            map(data?.videos, (video) => (
+              <Card
+                className='flex w-full flex-col gap-2 overflow-hidden rounded-sm lg:w-max'
+                key={video.id}
+              >
+                {/* <video src={video.file_url} controls width={250}></video> */}
+                <video controls width={250}>
+                  <source src={video.file_url} type='video/mp4' />
+                  <track kind='captions' label='English' />
+                  Your browser does not support the video tag.
+                </video>
 
-              <CardContent>
-                <p className='text-center text-sm font-medium'>{video.name}</p>
-              </CardContent>
-            </Card>
-          ))}
+                <CardContent>
+                  <p className='text-center text-sm font-medium'>
+                    {video.name}
+                  </p>
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            <NoData />
+          )}
         </CardContent>
       </Card>
     </div>
