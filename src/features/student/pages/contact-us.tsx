@@ -60,14 +60,14 @@ const ContactUs = () => {
         </CardHeader>
         <hr className='pb-5' />
         <CardContent className='space-y-10'>
-          <div className='grid grid-cols-2 gap-10'>
+          <div className='grid grid-cols-1 lg:grid-cols-2 gap-10'>
             <div className='flex place-items-center gap-10 justify-self-center'>
               <img
                 src={LogoImg}
                 alt='UPI logo'
-                className='size-40 rounded-full'
+                className='size-24 lg:size-40 rounded-full'
               />
-              <img src={JurusanImg} alt='Jurusan Logo' className='size-40' />
+              <img src={JurusanImg} alt='Jurusan Logo' className='size-24 lg:size-40' />
             </div>
 
             <div className='flex flex-col space-y-5'>
