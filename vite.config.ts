@@ -24,7 +24,7 @@ export default defineConfig({
               cacheName: 'google-fonts-cache',
               expiration: {
                 maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365 // <== 365 days
+                maxAgeSeconds: 60 * 60 * 24 * 365
               },
               cacheableResponse: {
                 statuses: [0, 200]
@@ -38,7 +38,7 @@ export default defineConfig({
               cacheName: 'gstatic-fonts-cache',
               expiration: {
                 maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365 // <== 365 days
+                maxAgeSeconds: 60 * 60 * 24 * 365
               },
               cacheableResponse: {
                 statuses: [0, 200]
@@ -47,30 +47,27 @@ export default defineConfig({
           },
           {
             urlPattern: /\**\/*/,
-            handler: 'NetworkFirst', // or any other caching strategy you prefer
+            handler: 'NetworkFirst',
             method: 'GET',
             options: {
               cacheName: 'all-cache',
               expiration: {
-                maxEntries: 100, // adjust as needed
-                maxAgeSeconds: 60 * 60 * 24 * 90 // cache for 1 hour
+                maxEntries: 100,
+                maxAgeSeconds: 60 * 60 * 24 * 365
               },
-              cacheableResponse: {
-                statuses: [200, 201] // Cache successful responses only
-              }
             }
           },
           {
             urlPattern: /^https:\/\/firebasestorage\.googleapis\.com\/v0\/b\/edu-quest-c471f\.appspot\.com\/o\/.*\?.*$/,
-            handler: 'CacheFirst', // or any other caching strategy you prefer
+            handler: 'CacheFirst',
             options: {
               cacheName: 'video-cache',
               expiration: {
-                maxEntries: 100, // adjust as needed
-                maxAgeSeconds: 60 * 60 * 24 * 90 // cache for 1 hour
+                maxEntries: 100,
+                maxAgeSeconds: 60 * 60 * 24 * 365
               },
               cacheableResponse: {
-                statuses: [200, 304] // Cache successful responses only
+                statuses: [200, 304]
               }
             }
           }
