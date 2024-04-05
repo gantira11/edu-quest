@@ -17,7 +17,7 @@ const Simulation = () => {
       <Breadcrumbs items={breadcrumbs} />
 
       <iframe
-        src='https://phet.colorado.edu/sims/html/circuit-construction-kit-dc/latest/circuit-construction-kit-dc_en.html'
+        src='/games/circuit-construction-kit-ac-virtual-lab_en.html'
         allowFullScreen
         title='game'
         width='100%'
