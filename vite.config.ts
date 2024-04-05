@@ -46,18 +46,6 @@ export default defineConfig({
             }
           },
           {
-            urlPattern: /\**\/*/,
-            handler: 'CacheFirst',
-            method: 'GET',
-            options: {
-              cacheName: 'all-cache',
-              expiration: {
-                maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 * 365
-              },
-            }
-          },
-          {
             urlPattern: /https:\/\/phet\.colorado\.edu\/sims\/html\/circuit-construction-kit-dc\/latest\/circuit-construction-kit-dc_en\.html/,
             handler: 'CacheFirst',
             options: {
@@ -70,6 +58,18 @@ export default defineConfig({
             options: {
               cacheName: 'firebase-storage-cache',
             },
+          },
+          {
+            urlPattern: /\**\/*/,
+            handler: 'CacheFirst',
+            method: 'GET',
+            options: {
+              cacheName: 'all-cache',
+              expiration: {
+                maxEntries: 100,
+                maxAgeSeconds: 60 * 60 * 24 * 365
+              },
+            }
           },
         ],
       },
