@@ -58,19 +58,19 @@ export default defineConfig({
             }
           },
           {
-            urlPattern: /^https:\/\/firebasestorage\.googleapis\.com\/v0\/b\/edu-quest-c471f\.appspot\.com\/o\/.*\?.*$/,
+            urlPattern: /https:\/\/phet\.colorado\.edu\/sims\/html\/circuit-construction-kit-dc\/latest\/circuit-construction-kit-dc_en\.html/,
             handler: 'CacheFirst',
             options: {
-              cacheName: 'video-cache',
-              expiration: {
-                maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 * 365
-              },
-              cacheableResponse: {
-                statuses: [200, 304]
-              }
-            }
-          }
+              cacheName: 'iframe-cache',
+            },
+          },
+          {
+            urlPattern: /^https:\/\/firebasestorage\.googleapis\.com\/.*/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'firebase-storage-cache',
+            },
+          },
         ],
       },
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
