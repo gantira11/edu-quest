@@ -17,10 +17,7 @@ const Simulation = () => {
       <Breadcrumbs items={breadcrumbs} />
 
       <iframe
-        src={
-          window.location.origin +
-          '/games/circuit-construction-kit-ac-virtual-lab_en.html'
-        }
+        src='/circuit-construction-kit-ac-virtual-lab_en.html'
         allowFullScreen
         title='game'
         width='100%'
