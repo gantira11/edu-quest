@@ -122,6 +122,7 @@ const QuizForm = () => {
         quetions: data.quetions?.map((question) => ({
           id: question.id,
           name: question.name,
+          weight: question.weight ?? null,
           discuss: question.discuss,
           options: question.options?.map((option) => ({
             id: option.id,
@@ -251,6 +252,16 @@ const QuizForm = () => {
                         placeholder='Pertanyaan'
                       />
                     </div>
+                    <InputForm
+                      label='Bobot Nilai'
+                      name={`quetions.${index}.weight`}
+                      placeholder='Bobot Nilai'
+                      onKeyPress={(event) => {
+                        if (!/[0-9]/.test(event.key)) {
+                          event.preventDefault();
+                        }
+                      }}
+                    />
                     <Button
                       type='button'
                       size='icon'
@@ -295,6 +306,7 @@ const QuizForm = () => {
                   append({
                     name: '',
                     discuss: '',
+                    weight: 0,
                     options: [{ name: '', is_correct: false }],
                   })
                 }

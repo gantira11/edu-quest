@@ -2,7 +2,7 @@ import { getDetailQuiz } from '@/features/quiz/services';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useMemo } from 'react';
-import { Option } from '@/features/quiz/utils/interfaces';
+import { Option, Quetion } from '@/features/quiz/utils/interfaces';
 import Breadcrumbs from '@/shared/components/breadcrumbs';
 import {
   Card,
@@ -54,16 +54,20 @@ const Results = () => {
     let point = 0;
 
     for (let i = 0; i < data?.quetions.length; i++) {
-      const isCorrect = data?.quetions[1]?.options?.find(
+      const isCorrect = data?.quetions[i]?.options?.find(
         (option: Option) => option.is_correct === true
       );
 
+      const currentQuestion = data?.quetions.find(
+        (question: Quetion) => question.id === isCorrect.quetion_id
+      );
+
       if (isCorrect?.id === answer[i]?.option_id) {
-        point = point + 1;
+        point = point + currentQuestion.weight;
       }
     }
 
-    return `${(point * 100) / data?.quetions.length} / 100`;
+    return point;
   };
 
   useEffect(() => {

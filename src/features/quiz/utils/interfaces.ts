@@ -25,6 +25,7 @@ export interface Quetion {
   quiz_id?: string;
   created_at?: Date;
   updated_at?: Date;
+  weight?: number | null;
   deleted_at?: null;
   options?: Option[];
 }
