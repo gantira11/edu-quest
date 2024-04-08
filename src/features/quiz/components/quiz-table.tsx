@@ -121,7 +121,7 @@ const QuizTable: FC<QuizTableProps> = ({ subject }) => {
                       <RiEyeLine size={16} />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent className='bg-black'>Edit</TooltipContent>
+                  <TooltipContent className='bg-black'>View</TooltipContent>
                 </Tooltip>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -167,7 +167,7 @@ const QuizTable: FC<QuizTableProps> = ({ subject }) => {
         },
       },
     ],
-    [quiz?.paginator]
+    [quiz?.paginator, navigate]
   );
 
   const handleDeleteQuiz = () => {

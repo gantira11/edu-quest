@@ -16,7 +16,7 @@ export default defineConfig({
       workbox: {
         skipWaiting: true,
         globPatterns: ['**/*'],
-        maximumFileSizeToCacheInBytes: 500000000,
+        maximumFileSizeToCacheInBytes: 5000000000000,
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
@@ -52,7 +52,7 @@ export default defineConfig({
             options: {
               cacheName: 'iframe-cache',
               expiration: {
-                maxEntries: 100,
+                // maxEntries: 100,
                 maxAgeSeconds: 60 * 60 * 24 * 365
               },
             },
@@ -63,7 +63,7 @@ export default defineConfig({
             options: {
               cacheName: 'firebase-storage-cache',
               expiration: {
-                maxEntries: 100,
+                // maxEntries: 100,
                 maxAgeSeconds: 60 * 60 * 24 * 365
               },
             },
@@ -75,7 +75,7 @@ export default defineConfig({
             options: {
               cacheName: 'all-cache',
               expiration: {
-                maxEntries: 100,
+                // maxEntries: 100,
                 maxAgeSeconds: 60 * 60 * 24 * 365
               },
             }
