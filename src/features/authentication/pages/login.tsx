@@ -11,6 +11,7 @@ const Login = () => {
 
   const handleAuth = () => {
     // if (!user) return;
+    console.log(user);
 
     if (user?.role.name === 'student') {
       navigate('/student/home', { replace: true });
@@ -22,7 +23,9 @@ const Login = () => {
   };
 
   useEffect(() => {
-    handleAuth();
+    if (user) {
+      handleAuth();
+    }
   }, [user]);
 
   return (
