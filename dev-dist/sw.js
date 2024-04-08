@@ -82,7 +82,7 @@ define(['./workbox-fa27bb03'], (function (workbox) { 'use strict';
     "revision": "3ca0b8505b4bec776b69afdba2768812"
   }, {
     "url": "index.html",
-    "revision": "0.064ffvgmt4g"
+    "revision": "0.bgleljrmkj8"
   }], {});
   workbox.cleanupOutdatedCaches();
   workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
@@ -109,21 +109,18 @@ define(['./workbox-fa27bb03'], (function (workbox) { 'use strict';
   workbox.registerRoute(/https:\/\/phet\.colorado\.edu\/sims\/html\/circuit-construction-kit-dc\/latest\/circuit-construction-kit-dc_en\.html/, new workbox.CacheFirst({
     "cacheName": "iframe-cache",
     plugins: [new workbox.ExpirationPlugin({
-      maxEntries: 100,
       maxAgeSeconds: 31536000
     })]
   }), 'GET');
   workbox.registerRoute(/^https:\/\/firebasestorage\.googleapis\.com\/.*/, new workbox.CacheFirst({
     "cacheName": "firebase-storage-cache",
     plugins: [new workbox.ExpirationPlugin({
-      maxEntries: 100,
       maxAgeSeconds: 31536000
     })]
   }), 'GET');
   workbox.registerRoute(/\**\/*/, new workbox.NetworkFirst({
     "cacheName": "all-cache",
     plugins: [new workbox.ExpirationPlugin({
-      maxEntries: 100,
       maxAgeSeconds: 31536000
     })]
   }), 'GET');

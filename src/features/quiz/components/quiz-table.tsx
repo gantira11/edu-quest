@@ -113,7 +113,7 @@ const QuizTable: FC<QuizTableProps> = ({ subject }) => {
                       variant='outline'
                       className='rounded-full'
                       onClick={() =>
-                        navigate(`/subjects/${subject.id}/quiz/${data.id}`, {
+                        navigate(`/subjects/${subject?.id}/quiz/${data?.id}`, {
                           state: subject,
                         })
                       }
@@ -131,7 +131,7 @@ const QuizTable: FC<QuizTableProps> = ({ subject }) => {
                       className='rounded-full'
                       onClick={() =>
                         navigate(
-                          `/subjects/${subject.id}/quiz/form/${data.id}`,
+                          `/subjects/${subject?.id}/quiz/form/${data?.id}`,
                           {
                             state: subject,
                           }
@@ -167,7 +167,7 @@ const QuizTable: FC<QuizTableProps> = ({ subject }) => {
         },
       },
     ],
-    [quiz?.paginator, navigate]
+    [quiz?.paginator, subject, navigate]
   );
 
   const handleDeleteQuiz = () => {
