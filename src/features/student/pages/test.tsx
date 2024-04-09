@@ -34,7 +34,7 @@ const Test = () => {
         path: `/student/pra-tests/${params.id}/quizzes`,
       },
       {
-        label: `${data?.name}`,
+        label: `${data?.name ?? ''}`,
         path: '',
       },
     ],

@@ -33,7 +33,7 @@ const VideosDetail = () => {
         path: '/student/videos',
       },
       {
-        label: `${data?.name}`,
+        label: `${data?.name ?? ''}`,
         path: '',
       },
     ],
@@ -58,8 +58,7 @@ const VideosDetail = () => {
                 className='flex w-full flex-col gap-2 overflow-hidden rounded-sm lg:w-max'
                 key={video.id}
               >
-                {/* <video src={video.file_url} controls width={250}></video> */}
-                <video controls width={250}>
+                <video controls>
                   <source src={video.file_url} type='video/mp4' />
                   <track kind='captions' label='English' />
                   Your browser does not support the video tag.

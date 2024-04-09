@@ -31,7 +31,7 @@ const SubjectsDetail = () => {
         path: '/student/subjects',
       },
       {
-        label: `${data?.name}`,
+        label: `${data?.name ?? ''}`,
         path: '',
       },
     ],
