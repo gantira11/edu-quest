@@ -1,29 +1,27 @@
 import React, { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import PageLoader from '../components/page-loader';
-import { useAuthStore } from '../stores/user-store';
+import Cookies from 'js-cookie';
 
 const BaseLayout = () => {
   const navigate = useNavigate();
 
-  const user = useAuthStore((state) => state.user);
-
   const handleAuth = () => {
-    if (user?.role.name === 'student') {
-      navigate('/student/home', { replace: true });
+    const session = JSON.parse(Cookies.get('user') as string);
 
-      return;
+    if (session.state.user !== null) {
+      if (session.state.user.role.name === 'student') {
+        navigate('/student/home', { replace: true });
+        return;
+      }
+
+      navigate('/dashboard', { replace: true });
     }
-
-    navigate('/dashboard');
   };
 
   useEffect(() => {
-    console.log(user, 'USER HERE');
-    if (user) {
-      handleAuth();
-    }
-  }, [user]);
+    handleAuth();
+  }, []);
 
   return (
     <section>
