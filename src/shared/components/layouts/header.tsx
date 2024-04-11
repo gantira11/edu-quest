@@ -20,6 +20,7 @@ const Header = () => {
 
   const handleLogout = () => {
     removeUser();
+    localStorage.clear();
     navigate('/', { replace: true });
   };
 

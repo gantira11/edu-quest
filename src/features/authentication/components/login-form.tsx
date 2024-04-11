@@ -45,6 +45,7 @@ const LoginForm = () => {
     mutateLogin.mutate(data, {
       onSuccess: (res) => {
         enqueueSnackbar({ variant: 'success', message: 'Login berhasil' });
+        localStorage.setItem('user', JSON.stringify(res.data?.data));
         persistUser(res.data.data);
         if (res.data.data.role.name === 'admin') {
           navigate('/dashboard', { replace: true });

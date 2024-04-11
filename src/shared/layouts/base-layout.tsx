@@ -1,16 +1,15 @@
 import React, { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import PageLoader from '../components/page-loader';
-import Cookies from 'js-cookie';
 
 const BaseLayout = () => {
   const navigate = useNavigate();
 
   const handleAuth = () => {
-    const session = JSON.parse(Cookies.get('user') as string);
-
-    if (session.state.user !== null) {
-      if (session.state.user.role.name === 'student') {
+    const storageUser = localStorage.getItem('user');
+    if (storageUser !== null) {
+      const user = JSON.parse(storageUser);
+      if (user.role.name === 'student') {
         navigate('/student/home', { replace: true });
         return;
       }
