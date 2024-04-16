@@ -4,8 +4,7 @@ import Cookies from 'js-cookie';
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: `${import.meta.env.VITE_BACKEND_BASE_URL}`,
-  timeout: 5000,
-
+  timeout: 500000,
 });
 
 axiosInstance.interceptors.request.use(
