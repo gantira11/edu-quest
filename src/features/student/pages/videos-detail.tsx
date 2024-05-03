@@ -1,4 +1,3 @@
-import axiosInstance from '@/config/axios';
 import { getDetailSubject } from '@/features/subjects/services';
 import Breadcrumbs from '@/shared/components/breadcrumbs';
 import {
@@ -11,7 +10,7 @@ import NoData from '@/shared/components/ui/no-data';
 import { Separator } from '@/shared/components/ui/separator';
 import { useQuery } from '@tanstack/react-query';
 import { map } from 'lodash';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
 const VideosDetail = () => {
