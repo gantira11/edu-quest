@@ -34,7 +34,6 @@ import {
   TooltipTrigger,
 } from '@/shared/components/ui/tooltip';
 import { enqueueSnackbar } from 'notistack';
-// import { queryClient } from '@/main';
 
 const Users = () => {
   const breadcrumbs = useMemo(
@@ -56,7 +55,7 @@ const Users = () => {
 
   const navigate = useNavigate();
 
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['GET_LIST_USER', filters],
     queryFn: getListUser,
     select: (data) => data?.data?.data,
