@@ -3,7 +3,7 @@ import Breadcrumbs from '@/shared/components/breadcrumbs';
 import { useQuery } from '@tanstack/react-query';
 import { map } from 'lodash';
 import { useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Card } from '@/shared/components/ui/card';
 import { cn } from '@/shared/utils/cn';
 import { Button } from '@/shared/components/ui/button';
@@ -20,35 +20,36 @@ const Discussion = () => {
     select: (data) => data?.data?.data,
   });
 
+  const location = useLocation();
+  const isEvaluasi = location.pathname.split('/').includes('evaluasi');
+
   const breadcrumbs = useMemo(
     () => [
       {
-        label: 'Pra Test',
-        path: `/student/pra-tests`,
+        label: isEvaluasi ? 'Evaluasi' : 'Pra Test',
+        path: `/student/${isEvaluasi ? 'evaluasi' : 'pra-tests'}`,
       },
       {
         label: 'Quiz',
-        path: `/student/pra-tests/${params.id}/quizzes`,
+        path: `/student/${isEvaluasi ? 'evaluasi' : 'pra-tests'}/${params.id}/quizzes`,
       },
       {
         label: `${data?.name}`,
-        path: `/student/pra-tests/${params.id}/quizzes/${params.quizId}`,
+        path: `/student/${isEvaluasi ? 'evaluasi' : 'pra-tests'}/${params.id}/quizzes/${params.quizId}`,
       },
       {
         label: `Results`,
-        path: `/student/pra-tests/${params.id}/quizzes/${params.quizId}/result`,
+        path: `/student/${isEvaluasi ? 'evaluasi' : 'pra-tests'}/${params.id}/quizzes/${params.quizId}/result`,
       },
       {
         label: `Pembahasan`,
-        path: `/student/pra-tests/${params.id}/quizzes/${params.quizId}/result`,
+        path: '',
       },
     ],
     [data]
   );
 
   const [selectedIndex, setSelectedIndex] = useState(0);
-
-  const isEvaluasi = location.pathname.split('/').includes('evaluasi');
 
   const answer = useAnswerStore((state) => state.answer);
   const resetState = useAnswerStore((state) => state.resetState);
@@ -86,8 +87,14 @@ const Discussion = () => {
           className='flex flex-col gap-4'
           key={data?.quetions[selectedIndex]?.id}
         >
-          <h1 className='text-base font-medium'>
-            {selectedIndex + 1}. {data?.quetions[selectedIndex]?.name}
+          <h1 className='flex gap-2 text-base font-medium'>
+            {selectedIndex + 1}.
+            <p
+              className='prose bg-red-50'
+              dangerouslySetInnerHTML={{
+                __html: data?.quetions[selectedIndex]?.name,
+              }}
+            ></p>
           </h1>
           <div className='flex flex-col gap-2'>
             {map(data?.quetions[selectedIndex].options, (option: Option) => (
@@ -102,7 +109,10 @@ const Discussion = () => {
                 )}
                 key={option.id}
               >
-                {option.name}
+                <p
+                  className='prose'
+                  dangerouslySetInnerHTML={{ __html: `${option.name}` }}
+                ></p>
               </div>
             ))}
           </div>

@@ -1,6 +1,6 @@
 import { getDetailQuiz } from '@/features/quiz/services';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useMemo } from 'react';
 import { Option, Quetion } from '@/features/quiz/utils/interfaces';
 import Breadcrumbs from '@/shared/components/breadcrumbs';
@@ -25,15 +25,18 @@ const Results = () => {
     select: (data) => data?.data?.data,
   });
 
+  const location = useLocation();
+  const isEvaluasi = location.pathname.split('/').includes('evaluasi');
+
   const breadcrumbs = useMemo(
     () => [
       {
-        label: 'Pra Test',
-        path: `/student/pra-tests`,
+        label: isEvaluasi ? 'Evaluasi' : 'Pra Test',
+        path: `/student/${isEvaluasi ? 'evaluasi' : 'pra-tests'}`,
       },
       {
         label: 'Quiz',
-        path: `/student/pra-tests/${params.id}/quizzes`,
+        path: `/student/${isEvaluasi ? 'evaluasi' : 'pra-tests'}/${params.id}/quizzes`,
       },
       {
         label: `${data?.name}`,

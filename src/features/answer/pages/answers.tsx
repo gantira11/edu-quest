@@ -7,16 +7,38 @@ import {
   CardTitle,
 } from '@/shared/components/ui/card';
 import { IParams } from '@/shared/utils/interfaces';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
-import { getAnswerList } from '../services';
+import { deleteAnswer, getAnswerList } from '../services';
 import { ColumnDef } from '@tanstack/react-table';
 import { IAnswer } from '../utils/interfaces';
 import { Input } from '@/shared/components/ui/input';
 import { debounce } from 'lodash';
-import { RiSearchLine } from '@remixicon/react';
+import { RiDeleteBinLine, RiEyeLine, RiSearchLine } from '@remixicon/react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/shared/components/ui/tooltip';
+import { Button } from '@/shared/components/ui/button';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/shared/components/ui/dialog';
+import { useNavigate } from 'react-router-dom';
+import { enqueueSnackbar } from 'notistack';
 
 const Answers = () => {
+  const navigate = useNavigate();
+
+  const [selectedRow, setSelectedRow] = useState<IAnswer | undefined>();
   const [filters, setFilters] = useState<IParams>({
     page: 1,
     limit: 10,
@@ -33,11 +55,28 @@ const Answers = () => {
     []
   );
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['GET_LIST_REPORTS', filters],
     queryFn: getAnswerList,
     select: (data) => data?.data?.data,
   });
+  const mutateDeleteAnswer = useMutation({ mutationFn: deleteAnswer });
+
+  const handleDelete = () => {
+    mutateDeleteAnswer.mutate(`${selectedRow?.id}`, {
+      onSuccess: () => {
+        enqueueSnackbar({
+          variant: 'success',
+          message: 'Data berhasil dihapus',
+        });
+        refetch();
+      },
+      onError: (err) => {
+        console.log(err);
+        enqueueSnackbar({ variant: 'success', message: 'Data gagal dihapus' });
+      },
+    });
+  };
 
   const columnDef: ColumnDef<IAnswer>[] = useMemo(
     () => [
@@ -70,6 +109,52 @@ const Answers = () => {
         accessorKey: 'point',
         header: 'Nilai',
         size: 1000,
+      },
+      {
+        accessorKey: 'actions',
+        header: () => {
+          return <div className='w-full text-center'>Aksi</div>;
+        },
+        size: 10,
+        cell: ({ row }) => {
+          const data = row.original;
+          return (
+            <div className='mx-3 flex justify-center gap-2'>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      size='icon'
+                      variant='outline'
+                      className='rounded-full'
+                      onClick={() => navigate(`${data.id}`)}
+                    >
+                      <RiEyeLine size={16} />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className='bg-black'>Detail</TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <DialogTrigger asChild>
+                      <Button
+                        size='icon'
+                        variant='outline'
+                        className='rounded-full'
+                        type='button'
+                        onClick={() => setSelectedRow(data)}
+                      >
+                        <RiDeleteBinLine size={16} />
+                      </Button>
+                    </DialogTrigger>
+                  </TooltipTrigger>
+                  <TooltipContent className='bg-black'>Delete</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          );
+        },
       },
     ],
     [data?.paginator]
@@ -108,18 +193,19 @@ const Answers = () => {
               Tambah Data
             </Button> */}
           </div>
-          {/* <Dialog> */}
+          <Dialog>
+            <DataTable
+              columns={columnDef}
+              data={data?.answers}
+              loading={isLoading}
+              paginator={data?.paginator}
+              onLimitChange={(e) =>
+                setFilters((prev) => ({ ...prev, limit: e }))
+              }
+              onPageChange={(e) => setFilters((prev) => ({ ...prev, page: e }))}
+            />
 
-          <DataTable
-            columns={columnDef}
-            data={data?.answers}
-            loading={isLoading}
-            paginator={data?.paginator}
-            onLimitChange={(e) => setFilters((prev) => ({ ...prev, limit: e }))}
-            onPageChange={(e) => setFilters((prev) => ({ ...prev, page: e }))}
-          />
-
-          {/* <DialogContent>
+            <DialogContent>
               <DialogHeader>
                 <DialogTitle>Delete data</DialogTitle>
                 <DialogDescription>
@@ -134,13 +220,13 @@ const Answers = () => {
                   </Button>
                 </DialogClose>
                 <DialogClose asChild>
-                  <Button size='sm' onClick={handleDeleteSubject}>
+                  <Button size='sm' onClick={handleDelete}>
                     Ya
                   </Button>
                 </DialogClose>
               </DialogFooter>
-            </DialogContent> */}
-          {/* </Dialog> */}
+            </DialogContent>
+          </Dialog>
         </CardContent>
       </Card>
     </div>

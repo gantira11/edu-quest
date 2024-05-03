@@ -75,7 +75,6 @@ const Subjects = () => {
           message: 'Materi berhasil dihapus',
         });
         refetch();
-        // queryClient.refetchQueries();
         setSelectedRow(undefined);
       },
       onError: (err) => console.log(err),

@@ -246,10 +246,22 @@ const QuizForm = () => {
                 <div className='flex flex-col gap-5' key={field.id}>
                   <div className={cn('flex items-stretch gap-2')}>
                     <div className='w-full'>
-                      <InputForm
+                      {/* <InputForm
                         label={`Pertanyaan ${index + 1}`}
                         name={`quetions.${index}.name`}
                         placeholder='Pertanyaan'
+                      /> */}
+                      <Controller
+                        control={methods.control}
+                        name={`quetions.${index}.name`}
+                        render={({ field }) => (
+                          <Editor
+                            value={field.value}
+                            onChange={(e: string) => {
+                              field.onChange(e);
+                            }}
+                          />
+                        )}
                       />
                     </div>
                     <InputForm
@@ -262,19 +274,21 @@ const QuizForm = () => {
                         }
                       }}
                     />
-                    <Button
-                      type='button'
-                      size='icon'
-                      className='mt-6 h-8 w-8'
-                      onClick={() =>
-                        handleDeleteQuestion(
-                          index,
-                          methods.getValues(`quetions.${index}`)
-                        )
-                      }
-                    >
-                      <RiDeleteBin2Line size={16} />
-                    </Button>
+                    <div>
+                      <Button
+                        type='button'
+                        size='icon'
+                        className='mt-6 h-8 w-8'
+                        onClick={() =>
+                          handleDeleteQuestion(
+                            index,
+                            methods.getValues(`quetions.${index}`)
+                          )
+                        }
+                      >
+                        <RiDeleteBin2Line size={16} />
+                      </Button>
+                    </div>
                   </div>
 
                   <Options index={index} key={field.id} />
@@ -352,7 +366,7 @@ const Options: React.FC<OptionsProps> = ({ index }) => {
   }, []);
 
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col gap-5'>
       <Label className='text-sm'>Jawaban</Label>
       <div className='space-y-4'>
         {fields.map((field, idx) => (
@@ -373,10 +387,17 @@ const Options: React.FC<OptionsProps> = ({ index }) => {
                   }}
                 />
                 <div className='w-full'>
-                  <InputForm
-                    key={field.id}
+                  <Controller
+                    control={methods.control}
                     name={`quetions.${index}.options.${idx}.name`}
-                    placeholder={`Jawaban ${idx + 1}`}
+                    render={({ field }) => (
+                      <Editor
+                        value={field.value}
+                        onChange={(e: string) => {
+                          field.onChange(e);
+                        }}
+                      />
+                    )}
                   />
                 </div>
               </div>

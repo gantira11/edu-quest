@@ -73,11 +73,17 @@ const LoginForm = () => {
       </div>
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)} className='space-y-6'>
-          <InputForm label='Username' required name='username' />
+          <InputForm
+            label='Username'
+            className='bg-white'
+            required
+            name='username'
+          />
           <InputForm
             label='Password'
             required
             name='password'
+            className='bg-white'
             suffixIcon={renderTogglePassword()}
             type={togglePassword ? 'password' : 'text'}
           />
@@ -87,6 +93,11 @@ const LoginForm = () => {
           </Button>
         </form>
       </FormProvider>
+      <div className='flex justify-center'>
+        <Button variant='ghost' onClick={() => navigate('how-to-use')}>
+          Cara Penggunaan
+        </Button>
+      </div>
     </div>
   );
 };

@@ -33,6 +33,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/shared/components/ui/tooltip';
+import { enqueueSnackbar } from 'notistack';
 // import { queryClient } from '@/main';
 
 const Users = () => {
@@ -145,8 +146,10 @@ const Users = () => {
   const handleDeleteUser = () => {
     mutateDeleteUser.mutate(selectedRow?.id, {
       onSuccess: () => {
-        // queryClient.invalidateQueries();
-        refetch();
+        enqueueSnackbar({
+          variant: 'success',
+          message: 'User berhasil dihapus',
+        });
       },
       onError: () => {},
     });

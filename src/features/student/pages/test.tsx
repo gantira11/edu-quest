@@ -16,6 +16,7 @@ const Test = () => {
   const navigate = useNavigate();
 
   const location = useLocation();
+  const isEvaluasi = location.pathname.split('/').includes('evaluasi');
 
   const { data } = useQuery({
     queryKey: ['GET_DETAIL_QUIZ', params.quizId],
@@ -26,12 +27,12 @@ const Test = () => {
   const breadcrumbs = useMemo(
     () => [
       {
-        label: 'Pra Test',
-        path: `/student/pra-tests`,
+        label: isEvaluasi ? 'Evaluasi' : 'Pra Test',
+        path: `/student/${isEvaluasi ? 'evaluasi' : 'pra-tests'}`,
       },
       {
         label: 'Quiz',
-        path: `/student/pra-tests/${params.id}/quizzes`,
+        path: `/student/${isEvaluasi ? 'evaluasi' : 'pra-tests'}/${params.id}/quizzes`,
       },
       {
         label: `${data?.name ?? ''}`,
@@ -43,8 +44,6 @@ const Test = () => {
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | undefined>();
-
-  const isEvaluasi = location.pathname.split('/').includes('evaluasi');
 
   const answer = useAnswerStore((state) => state.answer);
   const setAnswer = useAnswerStore((state) => state.setAnswer);
@@ -115,8 +114,14 @@ const Test = () => {
           className='flex flex-col gap-4'
           key={data?.quetions[selectedIndex]?.id}
         >
-          <h1 className='text-base font-medium'>
-            {selectedIndex + 1}. {data?.quetions[selectedIndex]?.name}
+          <h1 className='flex gap-2 text-base font-medium'>
+            {selectedIndex + 1}.
+            <p
+              className='prose'
+              dangerouslySetInnerHTML={{
+                __html: data?.quetions[selectedIndex]?.name,
+              }}
+            ></p>
           </h1>
           <div className='flex flex-col gap-2'>
             {map(data?.quetions[selectedIndex].options, (option) => (
@@ -130,7 +135,10 @@ const Test = () => {
                   setSelectedOption(option.id);
                 }}
               >
-                {option.name}
+                <p
+                  className='prose'
+                  dangerouslySetInnerHTML={{ __html: `${option.name}` }}
+                ></p>
               </div>
             ))}
           </div>

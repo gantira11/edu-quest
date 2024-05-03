@@ -1,5 +1,6 @@
 
 import { authenticationRoute } from "./authentication-route";
+import { baseRoute } from "./base-routes";
 import { cmsRoute } from "./cms-route";
 import { studentRoute } from "./student-route";
 
@@ -12,6 +13,7 @@ export interface IRoute {
 }
 
 export const router: IRoute[] = [
+  ...baseRoute,
   ...authenticationRoute,
   ...cmsRoute,
   ...studentRoute

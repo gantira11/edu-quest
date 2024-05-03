@@ -2,6 +2,10 @@
 import { lazy } from "react";
 
 const Dashboard = lazy(() => import('@features/dashboard/pages/dashboard'))
+
+const Objectives = lazy(() => import('@features/objectives/pages/objectives'));
+const ObjectivesForm = lazy(() => import('@features/objectives/pages/objectives-form'))
+
 const Subjects = lazy(() => import('@features/subjects/pages/subjects'))
 const SubjectsForm = lazy(() => import('@/features/subjects/pages/subjects-form'))
 const SubjectDetail = lazy(() => import('@features/subjects/pages/subjects-detail'))
@@ -13,12 +17,34 @@ const Users = lazy(() => import('@features/user/pages/users'))
 const UsersForm = lazy(() => import('@features/user/pages/users-form'))
 
 const Reports = lazy(() => import('@features/answer/pages/answers'))
+const ReportsDetail = lazy(() => import('@features/answer/pages/answers-detail'));
 
 export const cmsRoute = [
   {
     id: 'dashboard-page',
     path: '/dashboard',
     component: Dashboard,
+    layout: 'cms',
+    permission: ['admin']
+  },
+  {
+    id: 'objectives-page',
+    path: '/objectives',
+    component: Objectives,
+    layout: 'cms',
+    permission: ['admin']
+  },
+  {
+    id: 'objectives-form-page',
+    path: '/objectives/form',
+    component: ObjectivesForm,
+    layout: 'cms',
+    permission: ['admin']
+  },
+  {
+    id: 'objectives-form-edit-page',
+    path: '/objectives/form/:id',
+    component: ObjectivesForm,
     layout: 'cms',
     permission: ['admin']
   },
@@ -96,6 +122,13 @@ export const cmsRoute = [
     id: 'users-reports-page',
     path: '/reports',
     component: Reports,
+    layout: 'cms',
+    permission: ['admin']
+  },
+  {
+    id: 'users-reports-detail-page',
+    path: '/reports/:id',
+    component: ReportsDetail,
     layout: 'cms',
     permission: ['admin']
   },

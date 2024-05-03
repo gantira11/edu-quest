@@ -7,6 +7,7 @@ import {
   RiDashboardLine,
   RiFileChartLine,
   RiHomeLine,
+  RiSparkling2Line,
   RiSurveyLine,
   RiTodoLine,
   RiUser3Line,
@@ -31,6 +32,12 @@ const menus: Menu[] = [
     name: 'Dashboard',
     path: '/dashboard',
     icon: <RiDashboardLine size={18} />,
+  },
+  {
+    id: 'objectives-menu',
+    name: 'Tujuan Pembelajaran',
+    path: '/objectives',
+    icon: <RiSparkling2Line size={18} />,
   },
   {
     id: 'subjects-menu',

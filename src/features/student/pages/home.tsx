@@ -2,6 +2,8 @@ import Breadcrumbs from '@/shared/components/breadcrumbs';
 import { useMemo } from 'react';
 
 import HomeImg from '@/assets/home.png';
+import { useQuery } from '@tanstack/react-query';
+import { getDetailObjective } from '../services';
 
 const Home = () => {
   const breadcrumbs = useMemo(
@@ -13,6 +15,14 @@ const Home = () => {
     ],
     []
   );
+
+  const { data } = useQuery({
+    queryKey: ['GET_DETAIL_OBJECTIVES'],
+    queryFn: getDetailObjective,
+    select: (data) => data?.data?.data,
+  });
+
+  console.log(data, 'DATA');
 
   return (
     <div className='flex min-h-[80vh] flex-col gap-5'>
@@ -28,9 +38,15 @@ const Home = () => {
           </p>
         </div>
       </div>
-      <p className='text-center text-sm font-medium'>
-        KI/KD dan Indikator Pencapaian Kompetensi
-      </p>
+      <div>
+        <p className='text-center text-sm font-medium'>{data?.title}</p>
+        <div className='flex justify-center'>
+          <p
+            dangerouslySetInnerHTML={{ __html: data?.body }}
+            className='prose'
+          ></p>
+        </div>
+      </div>
     </div>
   );
 };

@@ -58,17 +58,6 @@ export default defineConfig({
             },
           },
           {
-            urlPattern: /^https:\/\/firebasestorage\.googleapis\.com\/.*/,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'firebase-storage-cache',
-              expiration: {
-                // maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 * 365
-              },
-            },
-          },
-          {
             urlPattern: /\**\/*/,
             handler: 'NetworkFirst',
             method: 'GET',
@@ -79,6 +68,17 @@ export default defineConfig({
                 maxAgeSeconds: 60 * 60 * 24 * 365
               },
             }
+          },
+          {
+            urlPattern: /^https:\/\/firebasestorage\.googleapis\.com\/.*/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'firebase-storage-cache',
+              expiration: {
+                // maxEntries: 100,
+                maxAgeSeconds: 60 * 60 * 24 * 365
+              },
+            },
           },
         ],
       },
