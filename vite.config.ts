@@ -71,7 +71,7 @@ export default defineConfig({
           },
           {
             urlPattern: /^https:\/\/firebasestorage\.googleapis\.com\/.*\.mp4/i,
-            handler: 'CacheFirst',
+            handler: 'NetworkFirst',
             options: {
               cacheName: 'firebase-storage-mp4-cache',
               expiration: {
