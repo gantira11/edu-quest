@@ -59,7 +59,7 @@ export default defineConfig({
           },
           {
             urlPattern: /\**\/*/,
-            handler: 'NetworkFirst',
+            handler: 'CacheFirst',
             method: 'GET',
             options: {
               cacheName: 'all-cache',
