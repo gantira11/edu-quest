@@ -70,16 +70,15 @@ export default defineConfig({
             }
           },
           {
-            urlPattern: /^https:\/\/firebasestorage\.googleapis\.com\/.*/,
+            urlPattern: /^https:\/\/firebasestorage\.googleapis\.com\/.*\.mp4/i,
             handler: 'CacheFirst',
             options: {
-              cacheName: 'firebase-storage-cache',
+              cacheName: 'firebase-storage-mp4-cache',
               expiration: {
-                // maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 * 365
+                maxAgeSeconds: 60 * 60 * 24 * 365 // Cache for 1 year
               },
             },
-          },
+          }
         ],
       },
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
