@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { getDetailSubject } from '@/features/subjects/services';
 import Breadcrumbs from '@/shared/components/breadcrumbs';
@@ -88,7 +88,7 @@ const getVideoFromIndexedDB = async (
   });
 };
 
-const VideosDetail: React.FC = () => {
+const VideosDetail = () => {
   const params = useParams();
   const [db, setDb] = useState<IDBDatabase | null>(null);
   const [videoURLs, setVideoURLs] = useState<Record<string, string>>({});
