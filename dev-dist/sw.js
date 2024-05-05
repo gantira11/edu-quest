@@ -82,7 +82,7 @@ define(['./workbox-fa27bb03'], (function (workbox) { 'use strict';
     "revision": "3ca0b8505b4bec776b69afdba2768812"
   }, {
     "url": "index.html",
-    "revision": "0.7mpraj9uj0o"
+    "revision": "0.pf9hg5r2v8g"
   }], {});
   workbox.cleanupOutdatedCaches();
   workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
@@ -118,13 +118,7 @@ define(['./workbox-fa27bb03'], (function (workbox) { 'use strict';
       maxAgeSeconds: 31536000
     })]
   }), 'GET');
-  workbox.registerRoute(/^https:\/\/firebasestorage\.googleapis\.com\/.*/, new workbox.CacheFirst({
-    "cacheName": "firebase-storage-cache",
-    plugins: [new workbox.ExpirationPlugin({
-      maxAgeSeconds: 31536000
-    })]
-  }), 'GET');
-  workbox.registerRoute(/^https:\/\/firebasestorage\.googleapis\.com\/.*\.mp4/i, new workbox.CacheFirst({
+  workbox.registerRoute("https://firebasestorage.googleapis.com/v0/b/edu-quest-c471f.appspot.com/o/videos%2FRANGKAIAN%20SERI%20PARALEL%20DAN%20CAMPURAN.mp4?alt=media&token=66d91950-143f-410c-bb32-fe98dd216d5f", new workbox.NetworkFirst({
     "cacheName": "firebase-storage-mp4-cache",
     plugins: [new workbox.ExpirationPlugin({
       maxAgeSeconds: 31536000
