@@ -14,18 +14,6 @@ import { useQuery } from '@tanstack/react-query';
 import { map, reject } from 'lodash';
 import { IVideo } from '@/features/subjects/utils/interfaces';
 
-interface Video {
-  id: string;
-  name: string;
-  file_url: string;
-}
-
-interface SubjectData {
-  id: string;
-  name: string;
-  videos: Video[];
-}
-
 interface IndexedDBResult {
   id: string;
   name: string;
