@@ -13,6 +13,7 @@ import { Separator } from '@/shared/components/ui/separator';
 import { useQuery } from '@tanstack/react-query';
 import { map, reject } from 'lodash';
 import { IVideo } from '@/features/subjects/utils/interfaces';
+import { RiLoader4Line } from '@remixicon/react';
 
 interface IndexedDBResult {
   id: string;
@@ -91,7 +92,6 @@ const getVideoFromIndexedDB = async (
 const VideosDetail = () => {
   const params = useParams();
   const [db, setDb] = useState<IDBDatabase | null>(null);
-  const [videoURLs, setVideoURLs] = useState<Record<string, string>>({});
 
   // Get subject detail data using useQuery
   const { data } = useQuery({
@@ -117,13 +117,6 @@ const VideosDetail = () => {
           if (!result) {
             // If the video is not in IndexedDB, save it
             saveVideoToIndexedDB(db, video);
-          } else {
-            // If the video is in IndexedDB, create an object URL and save it to state
-            const videoURL = URL.createObjectURL(result.blob);
-            setVideoURLs((prevState) => ({
-              ...prevState,
-              [`${video.id}`]: videoURL,
-            }));
           }
         });
       });
@@ -157,32 +150,69 @@ const VideosDetail = () => {
 
         <CardContent>
           {data?.videos?.length > 0 ? (
-            map(data?.videos, (video) => (
-              <Card
-                className='flex w-full flex-col gap-2 overflow-hidden rounded-sm lg:w-max'
-                key={video.id}
-              >
-                <video controls>
-                  <source
-                    src={videoURLs[video.id] || video.file_url}
-                    type='video/mp4'
-                  />
-                  <track kind='captions' label='English' />
-                  Your browser does not support the video tag.
-                </video>
+            map(data?.videos, (video) => {
+              return (
+                <Card
+                  className='flex w-full flex-col gap-2 overflow-hidden rounded-sm lg:w-max'
+                  key={video.id}
+                >
+                  <VideoPlayer db={db!} video={video} />
+                  {/* <video controls>
+                    <source
+                      src={videoURLs[video.id] || video.file_url}
+                      type='video/mp4'
+                    />
+                    <track kind='captions' label='English' />
+                    Your browser does not support the video tag.
+                  </video> */}
 
-                <CardContent>
-                  <p className='text-center text-sm font-medium'>
-                    {video.name}
-                  </p>
-                </CardContent>
-              </Card>
-            ))
+                  <CardContent>
+                    <p className='text-center text-sm font-medium'>
+                      {video.name}
+                    </p>
+                  </CardContent>
+                </Card>
+              );
+            })
           ) : (
             <NoData />
           )}
         </CardContent>
       </Card>
+    </div>
+  );
+};
+
+const VideoPlayer = ({ db, video }: { db: IDBDatabase; video: IVideo }) => {
+  const [videoUrl, setVideoUrl] = useState<string | undefined>();
+
+  useEffect(() => {
+    getVideoFromIndexedDB(db, `${video.id}`).then((res) => {
+      if (res?.blob) {
+        setVideoUrl(URL.createObjectURL(res?.blob));
+
+        return;
+      }
+
+      setVideoUrl(video.file_url);
+    });
+  }, []);
+
+  if (!videoUrl)
+    return (
+      <RiLoader4Line
+        className='animate-spin text-center text-primary'
+        size={32}
+      />
+    );
+
+  return (
+    <div className='w-80'>
+      <video controls>
+        <source src={videoUrl} type='video/mp4' />
+        <track kind='captions' label='English' />
+        Your browser does not support the video tag.
+      </video>
     </div>
   );
 };
