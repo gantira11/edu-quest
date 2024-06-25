@@ -69,7 +69,10 @@ const AnswersDetail = () => {
                 >
                   <div className='flex gap-2'>
                     <p>{index + 1}.</p>
-                    <h4>{answer?.quetion}</h4>
+
+                    <div
+                      dangerouslySetInnerHTML={{ __html: answer?.quetion }}
+                    ></div>
                   </div>
                   <div className='flex flex-col gap-2'>
                     {answer.option.map((el) => (
@@ -84,7 +87,7 @@ const AnswersDetail = () => {
                         )}
                         key={el}
                       >
-                        {el}
+                        <div dangerouslySetInnerHTML={{ __html: el }}></div>
                       </div>
                     ))}
                   </div>
