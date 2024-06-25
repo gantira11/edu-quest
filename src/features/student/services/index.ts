@@ -6,5 +6,5 @@ export const submitAnswer = (data: any) => {
 }
 
 export const getDetailObjective = () => {
-  return axiosInstance.get(`${Config.BASE_URL}/objectives-detail/63c240dc-2858-4488-9e90-f2f8418a4258`)
+  return axiosInstance.get(`${Config.BASE_URL}/objectives-detail/2610a9c5-e5b2-45f0-84b0-65d47d7704c5`)
 }
