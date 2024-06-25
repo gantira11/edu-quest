@@ -108,6 +108,8 @@ const Objectives = () => {
     [data?.paginator]
   );
 
+  console.log(data, 'HERE');
+
   return (
     <section className='flex flex-col gap-5'>
       <Breadcrumbs items={breadcrumbs} />
@@ -117,7 +119,11 @@ const Objectives = () => {
           <CardTitle>Tujuan Pembelajaran</CardTitle>
         </CardHeader>
         <CardContent className='flex flex-col gap-3 px-2 lg:px-4'>
-          <div className='flex justify-end gap-4'></div>
+          <div className='flex justify-end gap-4'>
+            {data?.objectives.length < 1 && (
+              <Button onClick={() => navigate('form')}>Tambah Data</Button>
+            )}
+          </div>
 
           <DataTable
             columns={columnDef}

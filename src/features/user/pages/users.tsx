@@ -55,7 +55,7 @@ const Users = () => {
 
   const navigate = useNavigate();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['GET_LIST_USER', filters],
     queryFn: getListUser,
     select: (data) => data?.data?.data,
@@ -149,6 +149,7 @@ const Users = () => {
           variant: 'success',
           message: 'User berhasil dihapus',
         });
+        refetch();
       },
       onError: () => {},
     });
