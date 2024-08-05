@@ -22,7 +22,6 @@ const Home = () => {
     select: (data) => data?.data?.data,
   });
 
-  console.log(data, 'DATA');
 
   return (
     <div className='flex min-h-[80vh] flex-col gap-5'>

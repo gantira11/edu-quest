@@ -62,7 +62,7 @@ const Results = () => {
       );
 
       const currentQuestion = data?.quetions.find(
-        (question: Quetion) => question.id === isCorrect.quetion_id
+        (question: Quetion) => question.id === isCorrect?.quetion_id
       );
 
       if (isCorrect?.id === answer[i]?.option_id) {
