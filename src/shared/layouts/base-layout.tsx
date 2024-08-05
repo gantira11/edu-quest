@@ -13,7 +13,7 @@ const BaseLayout = () => {
       const user = JSON.parse(storageUser);
       persistUser(user);
 
-      if (user.role.name === 'student') {
+      if (user?.role?.name === 'student') {
         navigate('/student/home', { replace: true });
         return;
       }

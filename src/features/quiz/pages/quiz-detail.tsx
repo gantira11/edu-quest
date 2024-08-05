@@ -60,7 +60,12 @@ const QuizDetail = () => {
               className='flex flex-col gap-3 rounded-md border p-4'
             >
               <h5 className='font-medium'>
-                {index + 1} . {question.name}
+                {/* {index + 1} . {question.name} */}
+                {index + 1}.{' '}
+                <p
+                  dangerouslySetInnerHTML={{ __html: `${question?.name}` }}
+                  className='prose'
+                ></p>
               </h5>
               {map(question.options, (option) => (
                 <div
@@ -69,7 +74,9 @@ const QuizDetail = () => {
                     option.is_correct && 'border-2 border-green-500'
                   )}
                 >
-                  {option.name}
+                  <p
+                    dangerouslySetInnerHTML={{ __html: `${option?.name}` }}
+                  ></p>
                 </div>
               ))}
               <div className='flex flex-col gap-2 rounded-lg border p-3'>
